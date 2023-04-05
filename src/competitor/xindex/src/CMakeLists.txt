@@ -5,8 +5,8 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(JEMALLOC_DIR "/usr/lib/x86_64-linux-gnu")
-set(MKL_LINK_DIRECTORY "/opt/intel/mkl/lib/intel64")
-set(MKL_INCLUDE_DIRECTORY "/opt/intel/mkl/include")
+set(MKL_LINK_DIRECTORY "/opt/intel/oneapi/mkl/latest/lib/intel64")
+set(MKL_INCLUDE_DIRECTORY "/opt/intel/oneapi/mkl/latest/include")
 
 # Set a default build type if none was specified
 # https://blog.kitware.com/cmake-and-the-default-build-type/

@@ -24,8 +24,8 @@ $ apt-get install -y intel-mkl-2019.0-045
 After the installation, please modify the following two lines in `CMakeLists.txt` accordingly.
 
 ```cmake
-set(MKL_LINK_DIRECTORY "/opt/intel/mkl/lib/intel64")
-set(MKL_INCLUDE_DIRECTORY "/opt/intel/mkl/include")
+set(MKL_LINK_DIRECTORY "/opt/intel/oneapi/mkl/latest/lib/intel64")
+set(MKL_INCLUDE_DIRECTORY "/opt/intel/oneapi/mkl/latest/include")
 ```
 
 ### (optional) Installing jemalloc

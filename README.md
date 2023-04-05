@@ -15,6 +15,53 @@ Chaichon Wongkham, Baotong Lu, Chris Liu, Zhicong Zhong, Eric Lo, and Tianzheng 
 - intel-tbb 2020.3
 - jemalloc
 
+## Config
+1. Install intel oneapi(which includes **intel mkl and tbb**)
+```bash
+# download the key to system keyring
+wget -O- https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB \
+| gpg --dearmor | sudo tee /usr/share/keyrings/oneapi-archive-keyring.gpg > /dev/null
+
+# add signed entry to apt sources and configure the APT client to use Intel repository:
+echo "deb [signed-by=/usr/share/keyrings/oneapi-archive-keyring.gpg] https://apt.repos.intel.com/oneapi all main" | sudo tee /etc/apt/sources.list.d/oneAPI.list
+
+# install oneapi
+sudo apt update
+sudo apt install intel-basekit
+```
+
+**Install tbb2020.3**
+
+- goto https://github.com/oneapi-src/oneTBB/releases?page=2
+- Find [Threading Building Blocks 2020 Update 3](https://github.com/oneapi-src/oneTBB/releases/tag/v2020.3)
+- Download [tbb-2020.3-lin.tgz](https://github.com/oneapi-src/oneTBB/releases/download/v2020.3/tbb-2020.3-lin.tgz) use `wget https://github.com/oneapi-src/oneTBB/releases/download/v2020.3/tbb-2020.3-lin.tgz`
+- Unzip the file under  `/opt/intel/oneapi/tbb/`
+
+2. Change the paths in GRE code
+   - replace `/opt/intel` with `/opt/intel/oneapi`
+
+   - replace `/mkl` with `/mkl/latest` in `cmake/FindMKL.cmake`
+
+   - replace `/opt/intel/mkl/` with `/opt/intel/oneapi/mkl/latest/` in `findex`, `xindex`
+
+   - repace `tbb` with `tbb/<version number>` in `cmake/findTBB.cmake` and `lippol/src/cmake/findTBB.cmake`
+
+   - replace `set(TBB_LIB_PATH_SUFFIX "lib/intel64/gcc4.4")` with what's inside `/opt/intel/oneapi/tbb/2020.3/lib/intel64`. In my case, it's `gcc4.8`
+
+3. For OS <= Ubuntu18.04, upgrade gcc and g++
+
+```bash
+sudo apt install gcc-8
+sudo apt install g++-8
+```
+4. For OS <= Ubuntu18.04, set the environment variable to specify the gcc and g++ version
+   
+   ```bash
+   export CC=/usr/bin/gcc-8
+   export CXX=/usr/bin/g++-8
+   ```
+
+
 ## Build
 ```
 git submodule update --init # only for the first time

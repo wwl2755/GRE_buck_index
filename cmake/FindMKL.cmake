@@ -57,10 +57,10 @@ if(MSVC)
   set(ProgramFilesx86 "ProgramFiles(x86)")
   set(INTEL_ROOT_DEFAULT $ENV{${ProgramFilesx86}}/IntelSWTools/compilers_and_libraries/windows)
 else()
-  set(INTEL_ROOT_DEFAULT "/opt/intel")
+  set(INTEL_ROOT_DEFAULT "/opt/intel/oneapi")
 endif()
 set(INTEL_ROOT ${INTEL_ROOT_DEFAULT} CACHE PATH "Folder contains intel libs")
-find_path(MKL_ROOT include/mkl.h PATHS $ENV{MKLROOT} ${INTEL_ROOT}/mkl
+find_path(MKL_ROOT include/mkl.h PATHS $ENV{MKLROOT} ${INTEL_ROOT}/mkl/latest
                                    DOC "Folder contains MKL")
 
 find_path(MKL_INCLUDE_DIR NAMES mkl.h HINTS ${MKL_ROOT}/include /usr/include/mkl)
