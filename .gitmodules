@@ -35,5 +35,5 @@
 	url = https://github.com/speedskater/hot.git
 [submodule "src/competitor/buckindex/src"]
 	path = src/competitor/buckindex/src
-	url = https://github.com/gdymind/BuckIndex.git
+	url = git@github.com:gdymind/BuckIndex.git
 
