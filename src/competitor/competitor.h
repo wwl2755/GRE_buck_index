@@ -4,6 +4,7 @@
 #include "./artsync/artrowex.h"
 #include "./artsync/artolc.h"
 #include "./artsync/artunsync.h"
+#include "./buckindex/buckindex.h"
 #include "./xindex/xindex.h"
 #include "./btreeolc/btreeolc.h"
 #include "./hot/hot.h"
@@ -13,8 +14,8 @@
 #include "pgm/pgm.h"
 #include "btree/btree.h"
 // #include "wormhole/wormhole.h"
-#include "wormhole_u64/wormhole_u64.h"
-#include "masstree/masstree.h"
+// #include "wormhole_u64/wormhole_u64.h"
+// #include "masstree/masstree.h"
 #include "finedex/finedex.h"
 #include "iostream"
 
@@ -30,21 +31,24 @@ indexInterface<KEY_TYPE, PAYLOAD_TYPE> *get_index(std::string index_type) {
   else if (index_type == "btreeolc") {
     index = new BTreeOLCInterface<KEY_TYPE, PAYLOAD_TYPE>;
   }
+  else if (index_type == "buckindex") {
+    index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE>;
+  }
   // else if (index_type == "wormhole") {
   //   index = new WormholeInterface<KEY_TYPE, PAYLOAD_TYPE>;
   // }
-  else if (index_type == "wormhole_u64") {
-    index = new WormholeU64Interface<KEY_TYPE, PAYLOAD_TYPE>;
-  }
+  // else if (index_type == "wormhole_u64") {
+  //   index = new WormholeU64Interface<KEY_TYPE, PAYLOAD_TYPE>;
+  // }
   else if( index_type == "hot") {
     index = new HotInterface<KEY_TYPE, PAYLOAD_TYPE>;
   }
   else if( index_type == "hotrowex") {
     index = new HotRowexInterface<KEY_TYPE, PAYLOAD_TYPE>;
   }
-  else if (index_type == "masstree") {
-    index = new MasstreeInterface<KEY_TYPE, PAYLOAD_TYPE>;
-  }
+  // else if (index_type == "masstree") {
+  //   index = new MasstreeInterface<KEY_TYPE, PAYLOAD_TYPE>;
+  // }
   else if (index_type == "xindex") {
     index = new xindexInterface<KEY_TYPE, PAYLOAD_TYPE>;
   }
