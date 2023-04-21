@@ -44,6 +44,11 @@ void BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE>::bulk_load(std::pair <KEY_TYPE, 
 
 template<class KEY_TYPE, class PAYLOAD_TYPE>
 bool BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE>::get(KEY_TYPE key, PAYLOAD_TYPE &val, Param *param) {
+  bool res = idx.lookup(key,val);
+  if (res == false) {
+    printf("fail to read key:  %lu\n",key);
+    return false;
+  }
   return true;
 }
 

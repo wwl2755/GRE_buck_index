@@ -23,6 +23,7 @@
 #include "../competitor/indexInterface.h"
 #include "pgm_metric.h"
 #include <jemalloc/jemalloc.h>
+#include <sys/time.h>
 
 template<typename KEY_TYPE, typename PAYLOAD_TYPE>
 class Benchmark {
@@ -175,7 +176,16 @@ public:
         thread_num = param.worker_num;
 
         COUT_THIS("bulk loading");
+
+        struct timeval startTime, endTime;
+        long time = 0;
+        gettimeofday(&startTime, 0);
+
         index->bulk_load(init_key_values, init_keys.size(), &param);
+
+        gettimeofday(&endTime, 0);
+        time += (endTime.tv_sec - startTime.tv_sec) * 1000000 + (endTime.tv_usec - startTime.tv_usec);
+        COUT_THIS("[bulk loading time]: " << time / 1000000.0 << "s");
     }
 
     /*
@@ -338,10 +348,10 @@ public:
                     //     printf("read not found, Key %lu\n",key);
                     //     continue;
                     // }
-                    // if(val != 123456789) {
-                    //     printf("read failed, Key %lu, val %llu\n",key, val);
-                    //     exit(1);
-                    // }
+                    if(val != 123456789) {
+                        printf("read failed, Key %lu, val %llu\n",key, val);
+                        exit(1);
+                    }
                     thread_param.success_read += ret;
                 } else if (op == INSERT) {  // insert
                     auto ret = index->put(key, 123456789, &paramI);
@@ -423,7 +433,7 @@ public:
             std::sort(stat.latency.begin(), stat.latency.end());
         }
 
-        printf("Throughput = %llu\n", stat.throughput);
+        printf("[Throughput = %llu]\n", stat.throughput);
         printf("Memory: %lld\n", stat.memory_consumption);
         printf("success_read: %llu\n", stat.success_read);
         printf("success_insert: %llu\n", stat.success_insert);
