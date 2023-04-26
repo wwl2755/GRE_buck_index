@@ -112,3 +112,50 @@ For additional features, add additional flags:
 --memory
 ```
 All the result will be output to the csv file specified in --output_path flag.
+
+## Update with latest commit
+
+1. Navigate to the submodule directory:
+
+```
+cd src/competitor/alex/src
+```
+
+2. Ensure that the submodule is on the desired branch (usually main or master). To check the current branch, run:
+
+```
+git branch
+```
+
+If you need to switch to another branch, use:
+
+```
+git checkout <branch-name>
+```
+
+3. Pull the latest changes from the submodule's remote repository:
+
+```
+git pull origin <branch-name>
+```
+
+4. After updating the submodule, navigate back to the main repository:
+
+```
+cd ../../../../
+```
+
+5. Commit the updated submodule reference in the main repository:
+
+```
+git add src/competitor/alex/src
+git commit -m "Update submodule to the latest version"
+```
+
+6. Now, the submodule is updated to the latest version, and the main repository's reference to the submodule is updated as well.
+
+Remember to push your changes to the main repository's remote if needed:
+
+```
+git push origin <branch-name>
+```
