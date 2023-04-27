@@ -29,7 +29,7 @@ public:
   long long memory_consumption() { return 0; }
 
 private:
-  buckindex::BuckIndex<KEY_TYPE, PAYLOAD_TYPE> idx;
+  buckindex::BuckIndex<KEY_TYPE, PAYLOAD_TYPE, 8, 256> idx; // TODO: add bucket size as command-line args
 };
 
 template<class KEY_TYPE, class PAYLOAD_TYPE>
