@@ -9,7 +9,9 @@ template<class KEY_TYPE, class PAYLOAD_TYPE>
 class BuckIndexInterface : public indexInterface<KEY_TYPE, PAYLOAD_TYPE> {
 public:
   using KeyValueType = buckindex::KeyValue<KEY_TYPE, PAYLOAD_TYPE>;
-  void init(Param *param = nullptr) {}
+  void init(Param *param = nullptr) {
+    idx.init(param->initial_filled_ratio, param->use_liner_regression, param->use_simd);
+  }
 
   void bulk_load(std::pair <KEY_TYPE, PAYLOAD_TYPE> *key_value, size_t num, Param *param = nullptr);
 
@@ -49,8 +51,8 @@ void BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE>::bulk_load(std::pair <KEY_TYPE, 
 
 template<class KEY_TYPE, class PAYLOAD_TYPE>
 bool BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE>::get(KEY_TYPE key, PAYLOAD_TYPE &val, Param *param) {
-  bool res = idx.lookup(key,val);
-  if (res == false) {
+  bool ret = idx.lookup(key,val);
+  if (ret == false) {
     printf("fail to read key:  %lu\n",key);
     return false;
   }
@@ -59,9 +61,13 @@ bool BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE>::get(KEY_TYPE key, PAYLOAD_TYPE 
 
 template<class KEY_TYPE, class PAYLOAD_TYPE>
 bool BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE>::put(KEY_TYPE key, PAYLOAD_TYPE value, Param *param) {
-  KeyValueType kv(key,value);
-  bool res = idx.insert(kv);
-  return res;
+  KeyValueType kv(key, value);
+  bool ret = idx.insert(kv);
+  if (ret == false) {
+    printf("fail to insert key:  %lu\n",key);
+    return false;
+  }
+  return true;
 }
 
 template<class KEY_TYPE, class PAYLOAD_TYPE>

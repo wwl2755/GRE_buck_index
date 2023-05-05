@@ -60,6 +60,10 @@ class Benchmark {
     bool memory_record;
     bool dataset_statistic;
     bool data_shift = false;
+    // buckindex parameters
+    double bli_initial_filled_ratio = 0.5;
+    bool bli_use_linear_regression = true;
+    bool bli_use_simd = true;
 
     std::vector <KEY_TYPE> init_keys;
     KEY_TYPE *keys;
@@ -169,7 +173,7 @@ public:
         index = get_index<KEY_TYPE, PAYLOAD_TYPE>(index_type);
 
         // initilize Index (sort keys first)
-        Param param = Param(thread_num, 0);
+        Param param = Param(thread_num, 0, bli_initial_filled_ratio, bli_use_linear_regression, bli_use_simd);
         index->init(&param);
 
         // deal with the background thread case
@@ -235,6 +239,9 @@ public:
         memory_record = get_boolean_flag(flags, "memory");
         dataset_statistic = get_boolean_flag(flags, "dataset_statistic");
         data_shift = get_boolean_flag(flags, "data_shift");
+        bli_initial_filled_ratio = stod(get_with_default(flags, "bli_initial_filled_ratio", "0.5"));
+        bli_use_linear_regression = get_boolean_flag(flags, "bli_use_linear_regression");
+        bli_use_simd = get_boolean_flag(flags, "bli_use_simd");
 
         COUT_THIS("[micro] Read:Insert:Update:Scan:Delete= " << read_ratio << ":" << insert_ratio << ":" << update_ratio << ":"
                                                       << scan_ratio << ":" << delete_ratio);
@@ -320,7 +327,7 @@ public:
         {
             // thread specifier
             auto thread_id = omp_get_thread_num();
-            auto paramI = Param(thread_num, thread_id);
+            auto paramI = Param(thread_num, thread_id, bli_initial_filled_ratio, bli_use_linear_regression, bli_use_simd);
             // Latency Sample Variable
             int latency_sample_interval = operations_num / (operations_num * latency_sample_ratio);
             auto latency_sample_start_time = tn.rdtsc();
@@ -472,7 +479,16 @@ public:
             ofile << "data_shift" << ",";
             ofile << "pgm" << ",";
             ofile << "error_bound" ",";
-            ofile << "table_size" << std::endl;
+            ofile << "table_size" << ",";
+
+            // if index_type == buckindex, output its parameters
+            if (index_type == "buckindex") {
+                ofile << "bli_initial_filled_ratio" << ",";
+                ofile << "bli_use_linear_regression" << ",";
+                ofile << "bli_use_simd" << ",";
+            }
+
+            std::cout << std::endl;
         }
 
         std::ofstream ofile;
