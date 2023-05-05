@@ -26,7 +26,12 @@ public:
     return 0;
   }
 
-  long long memory_consumption() { return 0; }
+  long long memory_consumption() {
+    // Use this function to print for now
+    idx.print_lookup_stat();
+    //idx.print_insert_stats();
+    return 0;
+  }
 
 private:
   buckindex::BuckIndex<KEY_TYPE, PAYLOAD_TYPE, 8, 256> idx; // TODO: add bucket size as command-line args
@@ -54,7 +59,9 @@ bool BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE>::get(KEY_TYPE key, PAYLOAD_TYPE 
 
 template<class KEY_TYPE, class PAYLOAD_TYPE>
 bool BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE>::put(KEY_TYPE key, PAYLOAD_TYPE value, Param *param) {
-  return true;
+  KeyValueType kv(key,value);
+  bool res = idx.insert(kv);
+  return res;
 }
 
 template<class KEY_TYPE, class PAYLOAD_TYPE>

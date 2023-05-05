@@ -1,0 +1,1 @@
+./build/microbench --keys_file=./datasets/books --keys_file_type=binary --read=0.5 --insert=0.5 --operations_num=1000000 --table_size=20000000 --init_table_ratio=0.5 --thread_num=1 --index=buckindex,alex,artunsync,pgm --memory 
