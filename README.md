@@ -83,6 +83,23 @@ To calculate throughput:
 --thread_num=24 \
 --index=index_name \
 ```
+
+Example:
+```
+./build/microbench \
+--keys_file=./datasets/covid \
+--keys_file_type=binary \
+--read=0.0 --insert=1.0 \
+--operations_num=800000000 \
+--table_size=-1 \
+--init_table_ratio=0.1 \
+--thread_num=1 \
+--index=buckindex \
+--bli_initial_filled_ratio=0.6 \
+--bli_use_linear_regression=1 \
+--bli_use_simd=1
+```
+
 table_size=-1 is to infer from the first line of the file.
 init_table_ratio is to specify the proportion of the dataset to bulkload.
 
