@@ -43,6 +43,10 @@ template<class KEY_TYPE, class PAYLOAD_TYPE>
 void BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE>::bulk_load(std::pair <KEY_TYPE, PAYLOAD_TYPE> *key_value, size_t num,
                                                           Param *param) {
     vector<KeyValueType> kvs;
+
+    KeyValueType kv1(std::numeric_limits<KEY_TYPE>::min(), 0);
+    kvs.push_back(kv1);
+
     for (int i = 0; i < num; i++) {
         kvs.push_back(KeyValueType(key_value[i].first, key_value[i].second));
     }

@@ -161,7 +161,7 @@ public:
 #pragma omp parallel for num_threads(thread_num)
         for (int i = 0; i < init_keys.size(); i++) {
             init_key_values[i].first = init_keys[i];
-            init_key_values[i].second = 123456789;
+            init_key_values[i].second = 123456789; // TODO: change to key
         }
         COUT_VAR(table_size);
         COUT_VAR(init_keys.size());
