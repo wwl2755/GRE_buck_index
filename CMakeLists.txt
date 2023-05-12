@@ -25,6 +25,12 @@ include_directories(${CMAKE_SOURCE_DIR}/src/competitor/buckindex/src/src)
 
 add_compile_options(-faligned-new -march=native -g -O3)
 
+option(BUCKINDEX_DEBUG "Enable debug mode for BuckIndex" OFF)
+
+if(BUCKINDEX_DEBUG)
+    add_definitions(-DBUCKINDEX_DEBUG)
+endif()
+
 # add_subdirectory(src/competitor/wormhole)
 # add_subdirectory(src/competitor/wormhole_u64)
 # add_subdirectory(src/competitor/masstree)

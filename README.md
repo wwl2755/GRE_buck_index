@@ -67,7 +67,12 @@ sudo apt install g++-8
 git submodule update --init # only for the first time
 mkdir -p build
 cd build
-cmake -DCMAKE_BUILD_TYPE=Release .. && make
+
+#if run in debug mode
+cmake .. -DBUCKINDEX_DEBUG=ON && make
+
+#else
+cmake .. && make
 ```
 
 ## Basic usage
