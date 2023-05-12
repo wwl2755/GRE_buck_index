@@ -23,6 +23,10 @@ SOFTWARE.
 */
 
 #pragma once
+
+#ifndef TSCNS_H
+#define TSCNS_H
+
 #include <time.h>
 
 class TSCNS
@@ -105,3 +109,5 @@ public:
   int64_t base_tsc = 0;
   int64_t base_ns = 0;
 };
+
+#endif // TSCNS_H
