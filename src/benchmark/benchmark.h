@@ -64,6 +64,8 @@ class Benchmark {
     double bli_initial_filled_ratio = 0.5;
     bool bli_use_linear_regression = true;
     bool bli_use_simd = true;
+    size_t bli_sbuck_size = 8;
+    size_t bli_dbuck_size = 256;
 
     std::vector <KEY_TYPE> init_keys;
     KEY_TYPE *keys;
@@ -173,8 +175,9 @@ public:
         index = get_index<KEY_TYPE, PAYLOAD_TYPE>(index_type);
 
         // initilize Index (sort keys first)
-        Param param = Param(thread_num, 0, bli_initial_filled_ratio, bli_use_linear_regression, bli_use_simd);
-        
+        Param param = Param(thread_num, 0,
+            bli_initial_filled_ratio, bli_use_linear_regression, bli_use_simd,
+            bli_sbuck_size, bli_dbuck_size);
         index->init(&param);
 
         // deal with the background thread case
@@ -243,6 +246,8 @@ public:
         bli_initial_filled_ratio = stod(get_with_default(flags, "bli_initial_filled_ratio", "0.5"));
         bli_use_linear_regression = stoi(get_with_default(flags, "bli_use_linear_regression", "1"));
         bli_use_simd = stoi(get_with_default(flags, "bli_use_simd", "1"));
+        bli_sbuck_size = stoi(get_with_default(flags, "bli_sbuck_size", "8"));
+        bli_dbuck_size = stoi(get_with_default(flags, "bli_dbuck_size", "256"));
 
         COUT_THIS("[micro] Read:Insert:Update:Scan:Delete= " << read_ratio << ":" << insert_ratio << ":" << update_ratio << ":"
                                                       << scan_ratio << ":" << delete_ratio);
@@ -328,7 +333,9 @@ public:
         {
             // thread specifier
             auto thread_id = omp_get_thread_num();
-            auto paramI = Param(thread_num, thread_id, bli_initial_filled_ratio, bli_use_linear_regression, bli_use_simd);
+            auto paramI = Param(thread_num, thread_id,
+                bli_initial_filled_ratio, bli_use_linear_regression, bli_use_simd,
+                bli_sbuck_size, bli_dbuck_size);
             // Latency Sample Variable
             int latency_sample_interval = operations_num / (operations_num * latency_sample_ratio);
             auto latency_sample_start_time = tn.rdtsc();
@@ -487,6 +494,8 @@ public:
                 ofile << "bli_initial_filled_ratio" << ",";
                 ofile << "bli_use_linear_regression" << ",";
                 ofile << "bli_use_simd" << ",";
+                ofile << "bli_sbuck_size" << ",";
+                ofile << "bli_dbuck_size" << ",";
             }
 
             std::cout << std::endl;
@@ -531,7 +540,15 @@ public:
         ofile << data_shift << ",";
         ofile << stat.fitness_of_dataset << ",";
         ofile << error_bound << ",";
-        ofile << table_size << std::endl;
+        ofile << table_size << ",";
+        if (index_type == "buckindex") {
+            ofile << bli_initial_filled_ratio << ",";
+            ofile << bli_use_linear_regression << ",";
+            ofile << bli_use_simd << ",";
+            ofile << bli_sbuck_size << ",";
+            ofile << bli_dbuck_size << ",";
+        }
+        ofile << std::endl;
         ofile.close();
 
         if (clear_flag) stat.clear();
