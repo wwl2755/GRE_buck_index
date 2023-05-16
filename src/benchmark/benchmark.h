@@ -174,6 +174,7 @@ public:
 
         // initilize Index (sort keys first)
         Param param = Param(thread_num, 0, bli_initial_filled_ratio, bli_use_linear_regression, bli_use_simd);
+        
         index->init(&param);
 
         // deal with the background thread case
@@ -240,8 +241,8 @@ public:
         dataset_statistic = get_boolean_flag(flags, "dataset_statistic");
         data_shift = get_boolean_flag(flags, "data_shift");
         bli_initial_filled_ratio = stod(get_with_default(flags, "bli_initial_filled_ratio", "0.5"));
-        bli_use_linear_regression = get_boolean_flag(flags, "bli_use_linear_regression");
-        bli_use_simd = get_boolean_flag(flags, "bli_use_simd");
+        bli_use_linear_regression = stoi(get_with_default(flags, "bli_use_linear_regression", "1"));
+        bli_use_simd = stoi(get_with_default(flags, "bli_use_simd", "1"));
 
         COUT_THIS("[micro] Read:Insert:Update:Scan:Delete= " << read_ratio << ":" << insert_ratio << ":" << update_ratio << ":"
                                                       << scan_ratio << ":" << delete_ratio);
