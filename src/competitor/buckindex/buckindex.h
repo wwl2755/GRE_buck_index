@@ -32,6 +32,7 @@ public:
     // Use this function to print for now
     idx.print_lookup_stat();
     //idx.print_insert_stats();
+    idx.dump();
     return 0;
   }
 
