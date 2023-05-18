@@ -24,6 +24,8 @@
 #include "pgm_metric.h"
 #include <jemalloc/jemalloc.h>
 #include <sys/time.h>
+#include <ittnotify.h> // Intel Vtune Profiling API
+
 
 template<typename KEY_TYPE, typename PAYLOAD_TYPE>
 class Benchmark {
@@ -557,6 +559,7 @@ public:
     void run_benchmark() {
         load_keys();
         generate_operations(keys);
+        __itt_resume();
         for (auto s: all_index_type) {
             COUT_THIS("index type: " << s);
             for (auto t: all_thread_num) {
@@ -569,6 +572,7 @@ public:
             }
             COUT_THIS("--------------------");
         }
+        __itt_pause();
     }
 
 };
