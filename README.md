@@ -198,9 +198,17 @@ source /opt/intel/oneapi/vtune/latest/vtune-vars.sh
 echo 0 | sudo tee /proc/sys/kernel/perf_event_paranoid
 
 # or install driver to get more detailed analysis
-./opt/intel/oneapi/vtune/latest/sepdk/src/insmod-sep
+## step1: instll the vtsspp driver
+cd /opt/intel/oneapi/vtune/latest/sepdk/src/vtsspp
+make
+sudo make install
+## step2: load all drivers
+sudo -s /opt/intel/oneapi/vtune/latest/sepdk/src/insmod-sep
+## step3: check if the driver is loaded
+lsmod | grep sep
 
-vtune -collect hotspots -r vtune_results/pure_read -- ./build/microbench --keys_file=./datasets/covid --keys_file_type=binary --read=1.0 --insert=0.0 --operations_num=800000000 --table_size=-1 --init_table_ratio=0.1 --thread_num=1 --index=buckindex --bli_initial_filled_ratio=0.6 --bli_use_linear_regression=1 --bli_use_simd=1 --bli_sbuck_size=8
+# replace <result_dir> with the directory you want to store the result
+vtune -collect hotspots -r vtune_results/<result _dir> -- ./build/microbench --keys_file=./datasets/books --keys_file_type=binary --read=1.0 --insert=0.0 --operations_num=800000000 --table_size=-1 --init_table_ratio=0.1 --thread_num=1 --index=buckindex --bli_initial_filled_ratio=0.6 --bli_use_linear_regression=1 --bli_use_simd=1 --bli_sbuck_size=8
 ```
 Other vtune collection type:
 ```
