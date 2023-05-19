@@ -22,8 +22,18 @@ include_directories(SYSTEM src/competitor/hot/src/libs/hot/single-threaded/inclu
 include_directories(SYSTEM src/competitor/hot/src/libs/idx/content-helpers/include)
 include_directories(${CMAKE_SOURCE_DIR}/src/competitor/buckindex/src/include)
 include_directories(${CMAKE_SOURCE_DIR}/src/competitor/buckindex/src/src)
+include_directories(/opt/intel/oneapi/vtune/latest/sdk/include/) # vtune headers
 
-add_compile_options(-faligned-new -march=native -g -O3)
+# vtune libraries
+set(VTUNE_LIB_PATH /opt/intel/oneapi/vtune/latest/sdk)
+find_library(ADVISOR_LIB NAMES advisor PATHS ${VTUNE_LIB_PATH}/lib64 ${VTUNE_LIB_PATH}/lib32 NO_DEFAULT_PATH)
+find_library(ITTNOTIFY_LIB NAMES ittnotify PATHS ${VTUNE_LIB_PATH}/lib64 ${VTUNE_LIB_PATH}/lib32 NO_DEFAULT_PATH)
+find_library(JITPROFILING_LIB NAMES jitprofiling PATHS ${VTUNE_LIB_PATH}/lib64 ${VTUNE_LIB_PATH}/lib32 NO_DEFAULT_PATH)
+message(STATUS "VTune ADVISOR_LIB: ${ADVISOR_LIB}")
+message(STATUS "VTune ITTNOTIFY_LIB: ${ITTNOTIFY_LIB}")
+message(STATUS "VTune JITPROFILING_LIB: ${JITPROFILING_LIB}")
+
+add_compile_options(-faligned-new -march=native -g -pg -O3)
 
 option(BUCKINDEX_DEBUG "Enable debug mode for BuckIndex" OFF)
 
@@ -49,4 +59,9 @@ add_executable(microbench
 #         # MASSTREE
 # )
 
-target_link_libraries(microbench PUBLIC OpenMP::OpenMP_CXX ${JEMALLOC_LIBRARIES} ${MKL_LIBRARIES} ${TBB_LIBRARIES})
+target_link_libraries(microbench
+        PUBLIC OpenMP::OpenMP_CXX ${JEMALLOC_LIBRARIES}
+        ${MKL_LIBRARIES} ${TBB_LIBRARIES}
+        ${ADVISOR_LIB} ${ITTNOTIFY_LIB} ${JITPROFILING_LIB}
+        dl
+)
