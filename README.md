@@ -72,7 +72,7 @@ cd build
 cmake .. -DBUCKINDEX_DEBUG=ON && make
 
 #else
-cmake .. && make
+cmake -DCMAKE_BUILD_TYPE=Release .. && make
 ```
 
 ## Basic usage
