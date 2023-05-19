@@ -15,6 +15,7 @@ public:
     assert(sbuck_size_ == 4 || sbuck_size_ == 8 || sbuck_size_ == 16 || sbuck_size_ == 32);
     assert(dbuck_size_ == 32 || dbuck_size_ == 64 || dbuck_size_ == 128 || dbuck_size_ == 256);
 
+    // TODO: change switch to xxx
     if (dbuck_size_ == 256) {
       switch (sbuck_size_) {
         case 4:

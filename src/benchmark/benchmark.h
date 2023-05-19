@@ -559,7 +559,7 @@ public:
     void run_benchmark() {
         load_keys();
         generate_operations(keys);
-        __itt_resume();
+        // __itt_resume();
         for (auto s: all_index_type) {
             COUT_THIS("index type: " << s);
             for (auto t: all_thread_num) {
@@ -572,7 +572,7 @@ public:
             }
             COUT_THIS("--------------------");
         }
-        __itt_pause();
+        // __itt_pause();
     }
 
 };
