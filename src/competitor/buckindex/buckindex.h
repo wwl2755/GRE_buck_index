@@ -10,6 +10,7 @@ class BuckIndexInterface : public indexInterface<KEY_TYPE, PAYLOAD_TYPE> {
 public:
   using KeyValueType = buckindex::KeyValue<KEY_TYPE, PAYLOAD_TYPE>;
   void init(Param *param = nullptr){
+    //idx.init(param->initial_filled_ratio, param->use_liner_regression, param->use_simd);
     sbuck_size_ = param->sbuck_size;
     dbuck_size_ = param->dbuck_size;
     assert(sbuck_size_ == 4 || sbuck_size_ == 8 || sbuck_size_ == 16 || sbuck_size_ == 32);
@@ -68,8 +69,29 @@ public:
  
   long long memory_consumption() {
     // Use this function to print for now
-    // idx->print_lookup_stat();
-    //idx->print_insert_stats();
+    
+    //idx.print_insert_stats();
+
+    switch (sbuck_size_) {
+      case 4:
+        idx_s4_.print_lookup_stat();
+        idx_s4_.dump();
+        break;
+      case 8:
+        idx_s8_.print_lookup_stat();
+        idx_s8_.dump();
+        break;
+      case 16:
+        idx_s16_.print_lookup_stat();
+        idx_s16_.dump();
+        break;
+      case 32:
+        idx_s32_.print_lookup_stat();
+        idx_s32_.dump();
+        break;
+      default:
+        assert(false);
+    }
     return 0;
   }
 
@@ -89,6 +111,7 @@ private:
   size_t sbuck_size_;
   size_t dbuck_size_;
   // buckindex::BuckIndex<KEY_TYPE, PAYLOAD_TYPE, 64, 256> *idx;
+  //buckindex::BuckIndex<KEY_TYPE, PAYLOAD_TYPE, 8, 256> idx;
 };
 
 template<class KEY_TYPE, class PAYLOAD_TYPE>
@@ -102,6 +125,7 @@ void BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE>::bulk_load(std::pair <KEY_TYPE, 
     for (int i = 0; i < num; i++) {
         kvs.push_back(KeyValueType(key_value[i].first, key_value[i].second));
     }
+    //idx.bulk_load(kvs);
 
     if (dbuck_size_ == 256) {
       switch (sbuck_size_) {

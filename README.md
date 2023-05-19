@@ -102,7 +102,9 @@ Example:
 --index=buckindex \
 --bli_initial_filled_ratio=0.6 \
 --bli_use_linear_regression=1 \
---bli_use_simd=1
+--bli_use_simd=1 \
+--bli_sbuck_size=8 \
+--bli_dbuck_size=256
 ```
 
 table_size=-1 is to infer from the first line of the file.
