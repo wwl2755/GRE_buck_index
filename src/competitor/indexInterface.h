@@ -11,10 +11,15 @@ struct Param {
   double initial_filled_ratio;
   bool use_liner_regression;
   bool use_simd;
+  size_t sbuck_size;
+  size_t dbuck_size;
 
-  Param(size_t worker_num, uint32_t thread_id, double initial_filled_ratio, bool use_liner_regression, bool use_simd)
-    : worker_num(worker_num), thread_id(thread_id), initial_filled_ratio(initial_filled_ratio),
-      use_liner_regression(use_liner_regression), use_simd(use_simd) {}
+  Param(size_t worker_num, uint32_t thread_id,
+        double initial_filled_ratio, bool use_liner_regression, bool use_simd,
+        size_t sbuck_size, size_t dbuck_size)
+          : worker_num(worker_num), thread_id(thread_id),
+            initial_filled_ratio(initial_filled_ratio), use_liner_regression(use_liner_regression), use_simd(use_simd),
+            sbuck_size(sbuck_size), dbuck_size(dbuck_size) {}
 };
 
 struct BaseCompare {
