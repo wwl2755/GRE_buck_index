@@ -5,52 +5,12 @@
 
 // using namespace buckindex;
 
-template<class KEY_TYPE, class PAYLOAD_TYPE>
+template<class KEY_TYPE, class PAYLOAD_TYPE, size_t SBUCKET_SIZE, size_t DBUCKET_SIZE>
 class BuckIndexInterface : public indexInterface<KEY_TYPE, PAYLOAD_TYPE> {
 public:
   using KeyValueType = buckindex::KeyValue<KEY_TYPE, PAYLOAD_TYPE>;
   void init(Param *param = nullptr){
-    //idx.init(param->initial_filled_ratio, param->use_liner_regression, param->use_simd);
-    sbuck_size_ = param->sbuck_size;
-    dbuck_size_ = param->dbuck_size;
-    assert(sbuck_size_ == 4 || sbuck_size_ == 8 || sbuck_size_ == 16 || sbuck_size_ == 32);
-    assert(dbuck_size_ == 32 || dbuck_size_ == 64 || dbuck_size_ == 128 || dbuck_size_ == 256);
-
-    if (dbuck_size_ == 256) {
-      switch (sbuck_size_) {
-        case 4:
-          idx_s4_.init(param->initial_filled_ratio, param->use_liner_regression, param->use_simd);
-          break;
-        case 8:
-          idx_s8_.init(param->initial_filled_ratio, param->use_liner_regression, param->use_simd);
-          break;
-        case 16:
-          idx_s16_.init(param->initial_filled_ratio, param->use_liner_regression, param->use_simd);
-          break;
-        case 32:
-          idx_s32_.init(param->initial_filled_ratio, param->use_liner_regression, param->use_simd);
-          break;
-        default:
-          assert(false);
-      }
-    } else {
-      switch (dbuck_size_) {
-        case 32:
-          idx_d32_.init(param->initial_filled_ratio, param->use_liner_regression, param->use_simd);
-          break;
-        case 64:
-          idx_d64_.init(param->initial_filled_ratio, param->use_liner_regression, param->use_simd);
-          break;
-        case 128:
-          idx_d128_.init(param->initial_filled_ratio, param->use_liner_regression, param->use_simd);
-          break;
-        case 256:
-          idx_d256_.init(param->initial_filled_ratio, param->use_liner_regression, param->use_simd);
-          break;
-        default:
-          assert(false);
-      }
-    }
+    idx.init(param->initial_filled_ratio, param->use_liner_regression, param->use_simd);
   }
 
   void bulk_load(std::pair <KEY_TYPE, PAYLOAD_TYPE> *key_value, size_t num, Param *param = nullptr);
@@ -67,54 +27,21 @@ public:
               Param *param = nullptr);
  
   long long memory_consumption() {
-    // Use this function to print for now
+    // Use this function to print for now; TODO: change to memeory_consumption
     
-    //idx.print_insert_stats();
-
-    switch (sbuck_size_) {
-      case 4:
-        idx_s4_.print_lookup_stat();
-        idx_s4_.dump();
-        break;
-      case 8:
-        idx_s8_.print_lookup_stat();
-        idx_s8_.dump();
-        break;
-      case 16:
-        idx_s16_.print_lookup_stat();
-        idx_s16_.dump();
-        break;
-      case 32:
-        idx_s32_.print_lookup_stat();
-        idx_s32_.dump();
-        break;
-      default:
-        assert(false);
-    }
+    idx.print_lookup_stat();
+    idx.dump();
+  
     return 0;
   }
 
 private:
-  // indexes with different s-bucket sizes
-  buckindex::BuckIndex<KEY_TYPE, PAYLOAD_TYPE, 4, 256> idx_s4_;
-  buckindex::BuckIndex<KEY_TYPE, PAYLOAD_TYPE, 8, 256> idx_s8_;
-  buckindex::BuckIndex<KEY_TYPE, PAYLOAD_TYPE, 16, 256> idx_s16_;
-  buckindex::BuckIndex<KEY_TYPE, PAYLOAD_TYPE, 32, 256> idx_s32_;
+  buckindex::BuckIndex<KEY_TYPE, PAYLOAD_TYPE, SBUCKET_SIZE, DBUCKET_SIZE> idx;
 
-  // indexes with different d-bucket sizes
-  buckindex::BuckIndex<KEY_TYPE, PAYLOAD_TYPE, 8, 32> idx_d32_;
-  buckindex::BuckIndex<KEY_TYPE, PAYLOAD_TYPE, 8, 64> idx_d64_;
-  buckindex::BuckIndex<KEY_TYPE, PAYLOAD_TYPE, 8, 128> idx_d128_;
-  buckindex::BuckIndex<KEY_TYPE, PAYLOAD_TYPE, 8, 256> idx_d256_;
-
-  size_t sbuck_size_;
-  size_t dbuck_size_;
-  // buckindex::BuckIndex<KEY_TYPE, PAYLOAD_TYPE, 64, 256> *idx;
-  //buckindex::BuckIndex<KEY_TYPE, PAYLOAD_TYPE, 8, 256> idx;
 };
 
-template<class KEY_TYPE, class PAYLOAD_TYPE>
-void BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE>::bulk_load(std::pair <KEY_TYPE, PAYLOAD_TYPE> *key_value, size_t num,
+template<class KEY_TYPE, class PAYLOAD_TYPE, size_t SBUCKET_SIZE, size_t DBUCKET_SIZE>
+void BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, SBUCKET_SIZE, DBUCKET_SIZE>::bulk_load(std::pair <KEY_TYPE, PAYLOAD_TYPE> *key_value, size_t num,
                                                           Param *param) {
     vector<KeyValueType> kvs;
 
@@ -124,85 +51,15 @@ void BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE>::bulk_load(std::pair <KEY_TYPE, 
     for (int i = 0; i < num; i++) {
         kvs.push_back(KeyValueType(key_value[i].first, key_value[i].second));
     }
-    //idx.bulk_load(kvs);
 
-    if (dbuck_size_ == 256) {
-      switch (sbuck_size_) {
-        case 4:
-          idx_s4_.bulk_load(kvs);
-          break;
-        case 8:
-          idx_s8_.bulk_load(kvs);
-          break;
-        case 16:
-          idx_s16_.bulk_load(kvs);
-          break;
-        case 32:
-          idx_s32_.bulk_load(kvs);
-          break;
-        default:
-          assert(false);
-      }
-    } else {
-      switch (dbuck_size_) {
-        case 32:
-          idx_d32_.bulk_load(kvs);
-          break;
-        case 64:
-          idx_d64_.bulk_load(kvs);
-          break;
-        case 128:
-          idx_d128_.bulk_load(kvs);
-          break;
-        case 256:
-          idx_d256_.bulk_load(kvs);
-          break;
-        default:
-          assert(false);
-      }
-    }
-    
+    idx.bulk_load(kvs); 
 }
 
-template<class KEY_TYPE, class PAYLOAD_TYPE>
-bool BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE>::get(KEY_TYPE key, PAYLOAD_TYPE &val, Param *param) {
+template<class KEY_TYPE, class PAYLOAD_TYPE, size_t SBUCKET_SIZE, size_t DBUCKET_SIZE>
+bool BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, SBUCKET_SIZE, DBUCKET_SIZE>::get(KEY_TYPE key, PAYLOAD_TYPE &val, Param *param) {
   bool ret;
-
-  if (dbuck_size_ == 256) {
-    switch (sbuck_size_) {
-      case 4:
-        ret = idx_s4_.lookup(key, val);
-        break;
-      case 8:
-        ret = idx_s8_.lookup(key, val);
-        break;
-      case 16:
-        idx_s16_.lookup(key, val);
-        break;
-      case 32:
-        ret = idx_s32_.lookup(key, val);
-        break;
-      default:
-        assert(false);
-    }
-  } else {
-    switch (dbuck_size_) {
-      case 32:
-        ret = idx_d32_.lookup(key, val);
-        break;
-      case 64:
-        ret = idx_d64_.lookup(key, val);
-        break;
-      case 128:
-        ret = idx_d128_.lookup(key, val);
-        break;
-      case 256:
-        ret = idx_d256_.lookup(key, val);
-        break;
-      default:
-        assert(false);
-    }
-  }
+  
+  ret = idx.lookup(key, val);
 
   if (ret == false) {
     printf("fail to read key:  %lu\n",key);
@@ -212,46 +69,12 @@ bool BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE>::get(KEY_TYPE key, PAYLOAD_TYPE 
   return true;
 }
 
-template<class KEY_TYPE, class PAYLOAD_TYPE>
-bool BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE>::put(KEY_TYPE key, PAYLOAD_TYPE value, Param *param) {
+template<class KEY_TYPE, class PAYLOAD_TYPE, size_t SBUCKET_SIZE, size_t DBUCKET_SIZE>
+bool BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, SBUCKET_SIZE, DBUCKET_SIZE>::put(KEY_TYPE key, PAYLOAD_TYPE value, Param *param) {
   KeyValueType kv(key, value);
   bool ret;
 
-  if (dbuck_size_ == 256) {
-    switch (sbuck_size_) {
-      case 4:
-        ret = idx_s4_.insert(kv);
-        break;
-      case 8:
-        ret = idx_s8_.insert(kv);
-        break;
-      case 16:
-        ret = idx_s16_.insert(kv);
-        break;
-      case 32:
-        ret = idx_s32_.insert(kv);
-        break;
-      default:
-        assert(false);
-    }
-  } else {
-    switch (dbuck_size_) {
-      case 32:
-        ret = idx_d32_.insert(kv);
-        break;
-      case 64:
-        ret = idx_d64_.insert(kv);
-        break;
-      case 128:
-        ret = idx_d128_.insert(kv);
-        break;
-      case 256:
-        ret = idx_d256_.insert(kv);
-        break;
-      default:
-        assert(false);
-    }
-  }
+  ret = idx.insert(kv);
 
   if (ret == false) {
     printf("fail to insert key:  %lu\n",key);
@@ -260,57 +83,22 @@ bool BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE>::put(KEY_TYPE key, PAYLOAD_TYPE 
   return true;
 }
 
-template<class KEY_TYPE, class PAYLOAD_TYPE>
-bool BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE>::update(KEY_TYPE key, PAYLOAD_TYPE value, Param *param) {
+template<class KEY_TYPE, class PAYLOAD_TYPE, size_t SBUCKET_SIZE, size_t DBUCKET_SIZE>
+bool BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, SBUCKET_SIZE, DBUCKET_SIZE>::update(KEY_TYPE key, PAYLOAD_TYPE value, Param *param) {
     return false;
 }
 
-template<class KEY_TYPE, class PAYLOAD_TYPE>
-bool BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE>::remove(KEY_TYPE key, Param *param) {
+template<class KEY_TYPE, class PAYLOAD_TYPE, size_t SBUCKET_SIZE, size_t DBUCKET_SIZE>
+bool BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, SBUCKET_SIZE, DBUCKET_SIZE>::remove(KEY_TYPE key, Param *param) {
   return false;
 }
 
-
-template<class KEY_TYPE, class PAYLOAD_TYPE>
-size_t BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE>::scan(KEY_TYPE key_low_bound, size_t key_num, std::pair<KEY_TYPE, PAYLOAD_TYPE> *result,
+template<class KEY_TYPE, class PAYLOAD_TYPE, size_t SBUCKET_SIZE, size_t DBUCKET_SIZE>
+size_t BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, SBUCKET_SIZE, DBUCKET_SIZE>::scan(KEY_TYPE key_low_bound, size_t key_num, std::pair<KEY_TYPE, PAYLOAD_TYPE> *result,
               Param *param) {
   size_t ret;
 
-  if (dbuck_size_ == 256) {
-    switch (sbuck_size_) {
-      case 4:
-        ret = idx_s4_.scan(key_low_bound, key_num, result);
-        break;
-      case 8:
-        ret = idx_s8_.scan(key_low_bound, key_num, result);
-        break;
-      case 16:
-        ret = idx_s16_.scan(key_low_bound, key_num, result);
-        break;
-      case 32:
-        ret = idx_s32_.scan(key_low_bound, key_num, result);
-        break;
-      default:
-        assert(false);
-    }
-  } else {
-    switch (dbuck_size_) {
-      case 32:
-        ret = idx_d32_.scan(key_low_bound, key_num, result);
-        break;
-      case 64:
-        ret = idx_d64_.scan(key_low_bound, key_num, result);
-        break;
-      case 128:
-        ret = idx_d128_.scan(key_low_bound, key_num, result);
-        break;
-      case 256:
-        ret = idx_d256_.scan(key_low_bound, key_num, result);
-        break;
-      default:
-        assert(false);
-    }
-  }
+  ret = idx.scan(key_low_bound, key_num, result);
   
   return ret;
 }

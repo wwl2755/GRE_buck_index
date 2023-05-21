@@ -174,12 +174,12 @@ public:
     }
 
     inline void prepare(index_t *&index, const KEY_TYPE *keys) {
-        index = get_index<KEY_TYPE, PAYLOAD_TYPE>(index_type);
-
         // initilize Index (sort keys first)
         Param param = Param(thread_num, 0,
             bli_initial_filled_ratio, bli_use_linear_regression, bli_use_simd,
             bli_sbuck_size, bli_dbuck_size);
+        
+        index = get_index<KEY_TYPE, PAYLOAD_TYPE>(index_type, &param);
         index->init(&param);
 
         // deal with the background thread case
@@ -337,7 +337,7 @@ public:
             auto thread_id = omp_get_thread_num();
             auto paramI = Param(thread_num, thread_id,
                 bli_initial_filled_ratio, bli_use_linear_regression, bli_use_simd,
-                bli_sbuck_size, bli_dbuck_size);
+                0, 0);
             // Latency Sample Variable
             int latency_sample_interval = operations_num / (operations_num * latency_sample_ratio);
             auto latency_sample_start_time = tn.rdtsc();
@@ -559,7 +559,7 @@ public:
     void run_benchmark() {
         load_keys();
         generate_operations(keys);
-        __itt_resume();
+        // __itt_resume();
         for (auto s: all_index_type) {
             COUT_THIS("index type: " << s);
             for (auto t: all_thread_num) {
@@ -572,7 +572,7 @@ public:
             }
             COUT_THIS("--------------------");
         }
-        __itt_pause();
+        // __itt_pause();
     }
 
 };
