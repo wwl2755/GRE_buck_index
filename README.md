@@ -73,7 +73,12 @@ cmake .. -DBUCKINDEX_DEBUG=ON && make
 
 #else
 cmake -DCMAKE_BUILD_TYPE=Release .. && make
+
+#if also want to run hint on hash function
+cmake -DBUCKINDEX_HINT_HASH=ON -DCMAKE_BUILD_TYPE=Release .. && make
 ```
+
+
 
 ## Basic usage
 To calculate throughput:
