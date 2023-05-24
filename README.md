@@ -73,9 +73,18 @@ cmake .. -DBUCKINDEX_DEBUG=ON && make
 
 #else
 cmake -DCMAKE_BUILD_TYPE=Release .. && make
+```
 
-#if also want to run hint on hash function
+## Hint system to accelerate search
+```
+#if want to run hint on hash function
 cmake -DBUCKINDEX_HINT_HASH=ON -DCMAKE_BUILD_TYPE=Release .. && make
+
+or 
+cmake -DCMAKE_BUILD_TYPE=Release .. && make
+
+# else if don't want to run hint on hash function
+cmake -DBUCKINDEX_HINT_HASH=OFF -DCMAKE_BUILD_TYPE=Release .. && make
 ```
 
 
