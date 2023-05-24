@@ -37,6 +37,8 @@ indexInterface<KEY_TYPE, PAYLOAD_TYPE> *get_index(std::string index_type, Param 
     int sbuck_size_ = param->sbuck_size;
     int dbuck_size_ = param->dbuck_size;
 
+    //index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 8, 256>;
+
     if (sbuck_size_ == 8 && dbuck_size_ == 32) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 8, 32>;
     else if (sbuck_size_ == 8 && dbuck_size_ == 64) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 8, 64>;
     else if (sbuck_size_ == 8 && dbuck_size_ == 128) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 8, 128>;
