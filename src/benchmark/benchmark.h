@@ -161,6 +161,8 @@ public:
         }
         tbb::parallel_sort(init_keys.begin(), init_keys.end());
 
+        std::cout << "Init keys: min = " << init_keys[0] << ", max = " << init_keys[init_keys.size() - 1] << std::endl;
+
         init_key_values = new std::pair<KEY_TYPE, PAYLOAD_TYPE>[init_keys.size()];
 #pragma omp parallel for num_threads(thread_num)
         for (int i = 0; i < init_keys.size(); i++) {

@@ -36,9 +36,14 @@ message(STATUS "VTune JITPROFILING_LIB: ${JITPROFILING_LIB}")
 add_compile_options(-faligned-new -march=native -g -pg -O3)
 
 option(BUCKINDEX_DEBUG "Enable debug mode for BuckIndex" OFF)
+option(BUCKINDEX_HINT_HASH "Enable hash hint has for BuckIndex" ON)
 
 if(BUCKINDEX_DEBUG)
     add_definitions(-DBUCKINDEX_DEBUG)
+endif()
+
+if(BUCKINDEX_HINT_HASH)
+    add_definitions(-DBUCKINDEX_HINT_HASH)
 endif()
 
 # add_subdirectory(src/competitor/wormhole)
