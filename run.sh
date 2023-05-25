@@ -1,1 +1,1 @@
-./release/microbench --keys_file=./datasets/osm --keys_file_type=binary --read=1 --insert=0 --operations_num=10000000 --table_size=20000000 --init_table_ratio=0.5 --thread_num=1 --index=buckindex,alexol,pgm,alex --memory --bli_use_simd=1 --bli_sbuck_size=8 --bli_dbuck_size=256
+./release/microbench --keys_file=./datasets/osm --keys_file_type=binary --read=1 --insert=0 --operations_num=10000000 --table_size=20000000 --init_table_ratio=0.5 --thread_num=1 --index=buckindex --memory--bli_sbuck_size=8 --bli_dbuck_size=256
