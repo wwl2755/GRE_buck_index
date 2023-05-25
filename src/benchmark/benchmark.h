@@ -64,8 +64,6 @@ class Benchmark {
     bool data_shift = false;
     // buckindex parameters
     double bli_initial_filled_ratio = 0.5;
-    bool bli_use_linear_regression = true;
-    bool bli_use_simd = true;
     size_t bli_sbuck_size = 8;
     size_t bli_dbuck_size = 256;
 
@@ -178,7 +176,7 @@ public:
     inline void prepare(index_t *&index, const KEY_TYPE *keys) {
         // initilize Index (sort keys first)
         Param param = Param(thread_num, 0,
-            bli_initial_filled_ratio, bli_use_linear_regression, bli_use_simd,
+            bli_initial_filled_ratio,
             bli_sbuck_size, bli_dbuck_size);
         
         index = get_index<KEY_TYPE, PAYLOAD_TYPE>(index_type, &param);
@@ -248,8 +246,6 @@ public:
         dataset_statistic = get_boolean_flag(flags, "dataset_statistic");
         data_shift = get_boolean_flag(flags, "data_shift");
         bli_initial_filled_ratio = stod(get_with_default(flags, "bli_initial_filled_ratio", "0.5"));
-        bli_use_linear_regression = stoi(get_with_default(flags, "bli_use_linear_regression", "1"));
-        bli_use_simd = stoi(get_with_default(flags, "bli_use_simd", "1"));
         bli_sbuck_size = stoi(get_with_default(flags, "bli_sbuck_size", "8"));
         bli_dbuck_size = stoi(get_with_default(flags, "bli_dbuck_size", "256"));
 
@@ -338,7 +334,7 @@ public:
             // thread specifier
             auto thread_id = omp_get_thread_num();
             auto paramI = Param(thread_num, thread_id,
-                bli_initial_filled_ratio, bli_use_linear_regression, bli_use_simd,
+                bli_initial_filled_ratio,
                 0, 0);
             // Latency Sample Variable
             int latency_sample_interval = operations_num / (operations_num * latency_sample_ratio);
@@ -496,8 +492,6 @@ public:
             // if index_type == buckindex, output its parameters
             if (index_type == "buckindex") {
                 ofile << "bli_initial_filled_ratio" << ",";
-                ofile << "bli_use_linear_regression" << ",";
-                ofile << "bli_use_simd" << ",";
                 ofile << "bli_sbuck_size" << ",";
                 ofile << "bli_dbuck_size" << ",";
             }
@@ -547,8 +541,6 @@ public:
         ofile << table_size << ",";
         if (index_type == "buckindex") {
             ofile << bli_initial_filled_ratio << ",";
-            ofile << bli_use_linear_regression << ",";
-            ofile << bli_use_simd << ",";
             ofile << bli_sbuck_size << ",";
             ofile << bli_dbuck_size << ",";
         }

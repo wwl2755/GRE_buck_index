@@ -36,14 +36,35 @@ message(STATUS "VTune JITPROFILING_LIB: ${JITPROFILING_LIB}")
 add_compile_options(-faligned-new -march=native -g -pg -O3)
 
 option(BUCKINDEX_DEBUG "Enable debug mode for BuckIndex" OFF)
-option(BUCKINDEX_HINT_HASH "Enable hash hint has for BuckIndex" ON)
+
+# option(BUCKINDEX_HINT_HASH "Enable hash hint in BuckIndex" ON)
+option(BUCKINDEX_NOT_HINT_HASH "Disable hash hint and use endpoint linear model in BuckIndex" OFF)
+
+# option(BUCKINDEX_USE_SIMD "Enable SIMD in BuckIndex" ON)
+option(BUCKINDEX_NOT_USE_SIMD "Disable SIMD in BuckIndex" OFF)
+
+# option(BUCKINDEX_USE_LINEAR_REGRESSION "Enable linear regression in BuckIndex" ON)
+option(BUCKINDEX_NOT_USE_LINEAR_REGRESSION "Disable linear regression and use endpoint linear model in BuckIndex" OFF)
+
+add_definitions(-DBUCKINDEX_HINT_HASH)
+add_definitions(-DBUCKINDEX_USE_SIMD)
+add_definitions(-DBUCKINDEX_USE_LINEAR_REGRESSION)
+
 
 if(BUCKINDEX_DEBUG)
     add_definitions(-DBUCKINDEX_DEBUG)
 endif()
 
-if(BUCKINDEX_HINT_HASH)
-    add_definitions(-DBUCKINDEX_HINT_HASH)
+if(BUCKINDEX_NOT_HINT_HASH)
+    remove_definitions(-DBUCKINDEX_HINT_HASH)
+endif()
+
+if(BUCKINDEX_NOT_USE_SIMD)
+    remove_definitions(-DBUCKINDEX_USE_SIMD)
+endif()
+
+if(BUCKINDEX_NOT_USE_LINEAR_REGRESSION)
+    remove_definitions(-DBUCKINDEX_USE_LINEAR_REGRESSION)
 endif()
 
 # add_subdirectory(src/competitor/wormhole)
