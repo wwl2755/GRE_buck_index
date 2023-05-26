@@ -72,7 +72,17 @@ cd build
 cmake .. -DBUCKINDEX_DEBUG=ON && make
 
 #else
-cmake -DCMAKE_BUILD_TYPE=Release .. && make
+cmake .. -DCMAKE_BUILD_TYPE=Release && make
+
+# not using mod hint; using linear model hint instead
+cmake .. -DBUCKINDEX_NOT_HINT_HASH=ON && make
+
+# not using simd
+cmake .. -DBUCKINDEX_NOT_USE_SIMD=ON && make
+
+# not using linear regression
+cmake .. -DBUCKINDEX_NOT_USE_LINEAR_REGRESSION=ON && make
+
 ```
 
 ## Hint system to accelerate search
@@ -115,8 +125,6 @@ Example:
 --thread_num=1 \
 --index=buckindex \
 --bli_initial_filled_ratio=0.6 \
---bli_use_linear_regression=1 \
---bli_use_simd=1 \
 --bli_sbuck_size=8 \
 --bli_dbuck_size=256
 ```
