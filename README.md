@@ -67,36 +67,27 @@ sudo apt install g++-8
 git submodule update --init # only for the first time
 mkdir -p build
 cd build
-
-#if run in debug mode
+```
+### Debug mode
+```
 cmake .. -DBUCKINDEX_DEBUG=ON && make
-
-#else
+```
+### Release mode
+```
 cmake .. -DCMAKE_BUILD_TYPE=Release && make
+```
 
+### Build with alternative design choices
+```
 # not using mod hint; using linear model hint instead
 cmake .. -DBUCKINDEX_NOT_HINT_HASH=ON && make
 
 # not using simd
 cmake .. -DBUCKINDEX_NOT_USE_SIMD=ON && make
 
-# not using linear regression
+# not using linear regression; using endpoint linear model instead
 cmake .. -DBUCKINDEX_NOT_USE_LINEAR_REGRESSION=ON && make
-
 ```
-
-## Hint system to accelerate search
-```
-#if want to run hint on hash function
-cmake -DBUCKINDEX_HINT_HASH=ON -DCMAKE_BUILD_TYPE=Release .. && make
-
-or 
-cmake -DCMAKE_BUILD_TYPE=Release .. && make
-
-# else if don't want to run hint on hash function
-cmake -DBUCKINDEX_HINT_HASH=OFF -DCMAKE_BUILD_TYPE=Release .. && make
-```
-
 
 
 ## Basic usage
