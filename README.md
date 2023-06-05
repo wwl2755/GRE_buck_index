@@ -85,18 +85,6 @@ cmake .. -DBUCKINDEX_NOT_USE_LINEAR_REGRESSION=ON && make
 
 ```
 
-## Hint system to accelerate search
-```
-#if want to run hint on hash function
-cmake -DBUCKINDEX_HINT_HASH=ON -DCMAKE_BUILD_TYPE=Release .. && make
-
-or 
-cmake -DCMAKE_BUILD_TYPE=Release .. && make
-
-# else if don't want to run hint on hash function
-cmake -DBUCKINDEX_HINT_HASH=OFF -DCMAKE_BUILD_TYPE=Release .. && make
-```
-
 
 
 ## Basic usage
