@@ -92,6 +92,7 @@ cmake .. -DBUCKINDEX_NOT_USE_LINEAR_REGRESSION=ON -DCMAKE_BUILD_TYPE=Release && 
 cmake .. -DBUCKINDEX_NOT_USE_SIMD=ON -DBUCKINDEX_DEBUG=ON && make
 
 
+
 ## Basic usage
 To calculate throughput:
 ```
