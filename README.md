@@ -80,14 +80,16 @@ cmake .. -DCMAKE_BUILD_TYPE=Release && make
 ### Build with alternative design choices
 ```
 # not using mod hint; using linear model hint instead
-cmake .. -DBUCKINDEX_NOT_HINT_HASH=ON && make
+cmake .. -DBUCKINDEX_NOT_HINT_HASH=ON -DCMAKE_BUILD_TYPE=Release && make
 
 # not using simd
-cmake .. -DBUCKINDEX_NOT_USE_SIMD=ON && make
+cmake .. -DBUCKINDEX_NOT_USE_SIMD=ON -DCMAKE_BUILD_TYPE=Release && make
 
 # not using linear regression; using endpoint linear model instead
-cmake .. -DBUCKINDEX_NOT_USE_LINEAR_REGRESSION=ON && make
+cmake .. -DBUCKINDEX_NOT_USE_LINEAR_REGRESSION=ON -DCMAKE_BUILD_TYPE=Release && make
 ```
+
+cmake .. -DBUCKINDEX_NOT_USE_SIMD=ON -DBUCKINDEX_DEBUG=ON && make
 
 
 ## Basic usage
