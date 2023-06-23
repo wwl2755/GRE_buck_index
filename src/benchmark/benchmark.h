@@ -495,7 +495,8 @@ public:
                 ofile << "bli_sbuck_size" << ",";
                 ofile << "bli_dbuck_size" << ",";
             }
-
+            ofile << std::endl;
+            
             std::cout << std::endl;
         }
 
