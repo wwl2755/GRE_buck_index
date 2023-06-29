@@ -35,10 +35,30 @@ message(STATUS "VTune JITPROFILING_LIB: ${JITPROFILING_LIB}")
 
 add_compile_options(-faligned-new -march=native -g -pg -O3)
 
+
+# hint options
+# set mod_hash as default
+set(HINT_MODE "mod_hash" CACHE STRING "Choose the hash mode: mod_hash, cl_hash, murmur_hash, model_predict, no_hash")
+
+if(HINT_MODE STREQUAL "mod_hash")
+    add_definitions(-DMOD_HASH)
+elseif(HINT_MODE STREQUAL "cl_hash")
+    add_definitions(-DCL_HASH)
+elseif(HINT_MODE STREQUAL "murmur_hash")
+    add_definitions(-DMURMUR_HASH)
+elseif(HINT_MODE STREQUAL "model_predict")
+    add_definitions(-DMODEL_PREDICT)
+elseif(HINT_MODE STREQUAL "no_hash")
+    add_definitions(-DNO_HASH)
+else()
+    message(STATUS "HINT_MODE variable is not set or not valid. Default configuration will be used.")
+endif()
+
+
 option(BUCKINDEX_DEBUG "Enable debug mode for BuckIndex" OFF)
 
 # option(BUCKINDEX_HINT_HASH "Enable hash hint in BuckIndex" ON)
-option(BUCKINDEX_NOT_HINT_HASH "Disable hash hint and use endpoint linear model in BuckIndex" OFF)
+# option(BUCKINDEX_NOT_HINT_HASH "Disable hash hint and use endpoint linear model in BuckIndex" OFF)
 
 # option(BUCKINDEX_USE_SIMD "Enable SIMD in BuckIndex" ON)
 option(BUCKINDEX_NOT_USE_SIMD "Disable SIMD in BuckIndex" OFF)
@@ -46,7 +66,7 @@ option(BUCKINDEX_NOT_USE_SIMD "Disable SIMD in BuckIndex" OFF)
 # option(BUCKINDEX_USE_LINEAR_REGRESSION "Enable linear regression in BuckIndex" ON)
 option(BUCKINDEX_NOT_USE_LINEAR_REGRESSION "Disable linear regression and use endpoint linear model in BuckIndex" OFF)
 
-add_definitions(-DBUCKINDEX_HINT_HASH)
+# add_definitions(-DBUCKINDEX_HINT_HASH)
 add_definitions(-DBUCKINDEX_USE_SIMD)
 add_definitions(-DBUCKINDEX_USE_LINEAR_REGRESSION)
 
@@ -55,9 +75,9 @@ if(BUCKINDEX_DEBUG)
     add_definitions(-DBUCKINDEX_DEBUG)
 endif()
 
-if(BUCKINDEX_NOT_HINT_HASH)
-    remove_definitions(-DBUCKINDEX_HINT_HASH)
-endif()
+# if(BUCKINDEX_NOT_HINT_HASH)
+#     remove_definitions(-DBUCKINDEX_HINT_HASH)
+# endif()
 
 if(BUCKINDEX_NOT_USE_SIMD)
     remove_definitions(-DBUCKINDEX_USE_SIMD)
