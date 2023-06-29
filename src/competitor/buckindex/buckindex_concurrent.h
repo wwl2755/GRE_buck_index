@@ -74,9 +74,9 @@ bool BLI_ConcurrentInterface<KEY_TYPE, PAYLOAD_TYPE, SBUCKET_SIZE, DBUCKET_SIZE>
 template<class KEY_TYPE, class PAYLOAD_TYPE, size_t SBUCKET_SIZE, size_t DBUCKET_SIZE>
 bool BLI_ConcurrentInterface<KEY_TYPE, PAYLOAD_TYPE, SBUCKET_SIZE, DBUCKET_SIZE>::put(KEY_TYPE key, PAYLOAD_TYPE value, Param *param) {
   KeyValueType kv(key, value);
-  bool ret;
+  int ret = -1;
 
-  ret = idx.insert(kv);
+  idx.insert(kv, &ret);
 
   if (ret == false) {
     printf("fail to insert key:  %lu\n",key);
