@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # dataset
-datasets="books fb osm covid"
+datasets="books"
 
 # Read/Insert ratios
 ratios="1:0 0:1 0.5:0.5"
@@ -10,7 +10,7 @@ ratios="1:0 0:1 0.5:0.5"
 sbuck_sizes="8"
 
 # dbuck_sizes
-dbuck_sizes="1024 2048 4096"
+dbuck_sizes="4096"
 
 # Iterate the string array using for loop
 for ratio in $ratios; do
