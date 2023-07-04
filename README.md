@@ -35,7 +35,9 @@ sudo apt install intel-basekit
 - goto https://github.com/oneapi-src/oneTBB/releases?page=2
 - Find [Threading Building Blocks 2020 Update 3](https://github.com/oneapi-src/oneTBB/releases/tag/v2020.3)
 - Download [tbb-2020.3-lin.tgz](https://github.com/oneapi-src/oneTBB/releases/download/v2020.3/tbb-2020.3-lin.tgz) use `wget https://github.com/oneapi-src/oneTBB/releases/download/v2020.3/tbb-2020.3-lin.tgz`
-- Unzip the file under  `/opt/intel/oneapi/tbb/`
+- Unzip the file `tar -xvzf tbb-2020.3-lin.tgz`
+- Rename it to `2020.3`: `mv tbb tbb-2020.3`
+- Copy it under  `/opt/intel/oneapi/tbb/`: `sudo cp -r tbb-2020.3 /opt/intel/oneapi/tbb/`
 
 2. Change the paths in GRE code
    - replace `/opt/intel` with `/opt/intel/oneapi`
@@ -60,6 +62,7 @@ sudo apt install g++-8
    export CC=/usr/bin/gcc-8
    export CXX=/usr/bin/g++-8
    ```
+5. Install jemalloc: `sudo apt install libjemalloc-dev`
 
 
 ## Build
@@ -80,10 +83,10 @@ cmake .. -DCMAKE_BUILD_TYPE=Release && make
 ### Build with alternative design choices
 ```
 # not using simd
-cmake .. -DBUCKINDEX_NOT_USE_SIMD=ON && make
+cmake .. -DBUCKINDEX_NOT_USE_SIMD=ON -DCMAKE_BUILD_TYPE=Release && make
 
 # not using linear regression; using endpoint linear model instead
-cmake .. -DBUCKINDEX_NOT_USE_LINEAR_REGRESSION=ON && make
+cmake .. -DBUCKINDEX_NOT_USE_LINEAR_REGRESSION=ON -DCMAKE_BUILD_TYPE=Release && make
 ```
 
 ### Build with various hint systems
