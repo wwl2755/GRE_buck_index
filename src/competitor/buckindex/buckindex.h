@@ -32,7 +32,8 @@ public:
     idx.print_lookup_stat();
     idx.dump();
   
-    return 0;
+    // TODO: change to memory_consumption; currently, it means the number of levels
+    return idx.get_num_levels();
   }
 
 private:
@@ -45,12 +46,19 @@ void BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, SBUCKET_SIZE, DBUCKET_SIZE>::bul
                                                           Param *param) {
     vector<KeyValueType> kvs;
 
-    KeyValueType kv1(std::numeric_limits<KEY_TYPE>::min(), 0);
-    kvs.push_back(kv1);
+    if (key_value[0].first != 0){
+        KeyValueType kv1(std::numeric_limits<KEY_TYPE>::min(), 0);
+        kvs.push_back(kv1);
+    }
 
     for (int i = 0; i < num; i++) {
         kvs.push_back(KeyValueType(key_value[i].first, key_value[i].second));
     }
+
+    // // debug usgae
+    // if(key_value[0].first == 0){
+    //   std::cout << "key_value[0].first == 0" << std::endl;
+    // }
 
     idx.bulk_load(kvs); 
 }
@@ -58,6 +66,11 @@ void BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, SBUCKET_SIZE, DBUCKET_SIZE>::bul
 template<class KEY_TYPE, class PAYLOAD_TYPE, size_t SBUCKET_SIZE, size_t DBUCKET_SIZE>
 bool BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, SBUCKET_SIZE, DBUCKET_SIZE>::get(KEY_TYPE key, PAYLOAD_TYPE &val, Param *param) {
   bool ret;
+
+  // // debug usage
+  // if(key == 0){
+  //   std::cout << "try to get key == 0" << std::endl;
+  // }
   
   ret = idx.lookup(key, val);
 
@@ -73,6 +86,11 @@ template<class KEY_TYPE, class PAYLOAD_TYPE, size_t SBUCKET_SIZE, size_t DBUCKET
 bool BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, SBUCKET_SIZE, DBUCKET_SIZE>::put(KEY_TYPE key, PAYLOAD_TYPE value, Param *param) {
   KeyValueType kv(key, value);
   bool ret;
+
+  // // debug usage
+  // if(key == 0){
+  //   std::cout << "try to put key == 0" << std::endl;
+  // }
 
   ret = idx.insert(kv);
 

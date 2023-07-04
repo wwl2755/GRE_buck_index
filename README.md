@@ -82,9 +82,6 @@ cmake .. -DCMAKE_BUILD_TYPE=Release && make
 
 ### Build with alternative design choices
 ```
-# not using mod hint; using linear model hint instead
-cmake .. -DBUCKINDEX_NOT_HINT_HASH=ON -DCMAKE_BUILD_TYPE=Release && make
-
 # not using simd
 cmake .. -DBUCKINDEX_NOT_USE_SIMD=ON -DCMAKE_BUILD_TYPE=Release && make
 
@@ -92,7 +89,14 @@ cmake .. -DBUCKINDEX_NOT_USE_SIMD=ON -DCMAKE_BUILD_TYPE=Release && make
 cmake .. -DBUCKINDEX_NOT_USE_LINEAR_REGRESSION=ON -DCMAKE_BUILD_TYPE=Release && make
 ```
 
-cmake .. -DBUCKINDEX_NOT_USE_SIMD=ON -DBUCKINDEX_DEBUG=ON && make
+### Build with various hint systems
+```
+cmake .. -DHINT_MODE=mod_hash
+cmake .. -DHINT_MODE=cl_hash
+cmake .. -DHINT_MODE=murmur_hash
+cmake .. -DHINT_MODE=model_predict
+cmake .. -DHINT_MODE=no_hash
+```
 
 
 
