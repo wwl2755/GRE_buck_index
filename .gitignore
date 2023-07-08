@@ -4,6 +4,9 @@ dataset/
 datasets/
 build
 build/*
+release
+release/*
+release*/
 resources
 resources/*
 # result
