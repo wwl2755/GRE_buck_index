@@ -57,13 +57,11 @@ endif()
 
 option(BUCKINDEX_DEBUG "Enable debug mode for BuckIndex" OFF)
 
-# option(BUCKINDEX_USE_SIMD "Enable SIMD in BuckIndex" ON)
-option(BUCKINDEX_NOT_USE_SIMD "Disable SIMD in BuckIndex" OFF)
+option(BUCKINDEX_USE_SIMD "Enable SIMD in BuckIndex" OFF)
 
 # option(BUCKINDEX_USE_LINEAR_REGRESSION "Enable linear regression in BuckIndex" ON)
 option(BUCKINDEX_NOT_USE_LINEAR_REGRESSION "Disable linear regression and use endpoint linear model in BuckIndex" OFF)
 
-add_definitions(-DBUCKINDEX_USE_SIMD)
 add_definitions(-DBUCKINDEX_USE_LINEAR_REGRESSION)
 
 
@@ -72,9 +70,10 @@ if(BUCKINDEX_DEBUG)
 endif()
 
 
-if(BUCKINDEX_NOT_USE_SIMD)
-    remove_definitions(-DBUCKINDEX_USE_SIMD)
+if(BUCKINDEX_USE_SIMD)
+    add_definitions(-DBUCKINDEX_USE_SIMD)
 endif()
+message(STATUS "BUCKINDEX_USE_SIMD: ${BUCKINDEX_USE_SIMD}")
 
 if(BUCKINDEX_NOT_USE_LINEAR_REGRESSION)
     remove_definitions(-DBUCKINDEX_USE_LINEAR_REGRESSION)
