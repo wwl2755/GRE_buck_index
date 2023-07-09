@@ -11,7 +11,7 @@ class BLI_ConcurrentInterface : public indexInterface<KEY_TYPE, PAYLOAD_TYPE> {
 public:
   using KeyValueType = buckindex::KeyValue<KEY_TYPE, PAYLOAD_TYPE>;
   void init(Param *param = nullptr){
-    idx.init(param->initial_filled_ratio);
+    idx.init(param->initial_filled_ratio, param->error_bound);
   }
 
   void bulk_load(std::pair <KEY_TYPE, PAYLOAD_TYPE> *key_value, size_t num, Param *param = nullptr);

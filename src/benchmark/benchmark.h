@@ -177,7 +177,7 @@ public:
         // initilize Index (sort keys first)
         Param param = Param(thread_num, 0,
             bli_initial_filled_ratio,
-            bli_sbuck_size, bli_dbuck_size);
+            bli_sbuck_size, bli_dbuck_size, error_bound);
         
         index = get_index<KEY_TYPE, PAYLOAD_TYPE>(index_type, &param);
         index->init(&param);
@@ -335,7 +335,7 @@ public:
             auto thread_id = omp_get_thread_num();
             auto paramI = Param(thread_num, thread_id,
                 bli_initial_filled_ratio,
-                0, 0);
+                0, 0, 0);
             // Latency Sample Variable
             int latency_sample_interval = operations_num / (operations_num * latency_sample_ratio);
             auto latency_sample_start_time = tn.rdtsc();
