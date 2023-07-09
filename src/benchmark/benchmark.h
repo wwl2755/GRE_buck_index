@@ -71,6 +71,7 @@ class Benchmark {
     KEY_TYPE *keys;
     std::pair <KEY_TYPE, PAYLOAD_TYPE> *init_key_values;
     std::vector <std::pair<Operation, KEY_TYPE>> operations;
+    std::vector <std::pair<Operation, KEY_TYPE>> operations_mrsw[24];
     std::mt19937 gen;
 
     struct Stat {
@@ -320,6 +321,52 @@ public:
         delete[] sample_ptr;
     }
 
+    void generate_operations_mrsw(KEY_TYPE *keys) {
+        // prepare operations
+        COUT_THIS("sample keys.");
+        KEY_TYPE *sample_ptr = nullptr;
+        if (sample_distribution == "uniform") {
+            sample_ptr = get_search_keys(&init_keys[0], init_table_size, operations_num, &random_seed);
+        } else if (sample_distribution == "zipf") {
+            sample_ptr = get_search_keys_zipf(&init_keys[0], init_table_size, operations_num, &random_seed);
+        }
+
+        assert(operations_num % thread_num == 0);
+        int operations_per_thread = operations_num / thread_num;
+        for (int p = 0; p < thread_num; ++p) {
+            operations_mrsw[p].reserve(operations_per_thread);
+        }
+
+        // generate operations(read, insert, update, scan)
+        COUT_THIS("generate operations.");
+        std::uniform_real_distribution<> ratio_dis(0, 1);
+        size_t sample_counter = 0, insert_counter = init_table_size;
+
+        size_t temp_counter = 0;
+        for (size_t i = 0; i < operations_per_thread; ++i) {
+            // generate read opreations for each reader thread
+            for (int p = 0; p < thread_num - 1; p++) {
+                if(i % 10 < 6) // 60% of the read operations are from the init keys
+                    operations_mrsw[p].push_back(std::pair<Operation, KEY_TYPE>(READ, sample_ptr[sample_counter++]));
+                else
+                    operations_mrsw[p].push_back(std::pair<Operation, KEY_TYPE>(READ, keys[temp_counter++]));
+            }
+            
+            // generate write operations for the writer thread(the last thread)
+            if (insert_counter >= table_size) {
+                    operations_num = i * thread_num;
+                    break;
+                }
+            operations_mrsw[thread_num - 1].push_back(std::pair<Operation, KEY_TYPE>(INSERT, keys[insert_counter++]));
+        }
+
+        for (int p = 0; p < thread_num; ++p) {
+            COUT_VAR(operations_mrsw[p].size());
+        }
+
+        delete[] sample_ptr;
+    }
+
     void run(index_t *index) {
         std::thread *thread_array = new std::thread[thread_num];
         param_t params[thread_num];
@@ -430,6 +477,101 @@ public:
 
         delete[] thread_array;
     }
+
+    void run_mrsw(index_t *index) {
+        std::thread *thread_array = new std::thread[thread_num];
+        param_t params[thread_num];
+        TSCNS tn;
+        tn.init();
+        printf("Begin running\n");
+        auto start_time = tn.rdtsc();
+        auto end_time = tn.rdtsc();
+    //    System::profile("perf.data", [&]() {
+#pragma omp parallel num_threads(thread_num)
+{
+            // thread specifier
+            auto thread_id = omp_get_thread_num();
+            auto paramI = Param(thread_num, thread_id,
+                bli_initial_filled_ratio,
+                0, 0, 0);
+            // Latency Sample Variable
+            int latency_sample_interval = operations_num / (operations_num * latency_sample_ratio);
+            auto latency_sample_start_time = tn.rdtsc();
+            auto latency_sample_end_time = tn.rdtsc();
+            param_t &thread_param = params[thread_id];
+            thread_param.latency.reserve(operations_num / latency_sample_interval);
+            // Operation Parameter
+            PAYLOAD_TYPE val;
+            std::pair <KEY_TYPE, PAYLOAD_TYPE> *scan_result = new std::pair<KEY_TYPE, PAYLOAD_TYPE>[scan_num];
+            // waiting all thread ready
+#pragma omp barrier
+#pragma omp master
+            start_time = tn.rdtsc();
+// running benchmark
+            for (auto i = 0; i < operations_mrsw[thread_id].size(); i++) {
+                auto op = operations_mrsw[thread_id][i].first;
+                auto key = operations_mrsw[thread_id][i].second;
+
+                if (latency_sample && i % latency_sample_interval == 0)
+                    latency_sample_start_time = tn.rdtsc();
+
+                if (op == READ) {  // get
+                    auto ret = index->get(key, val, &paramI);
+                    
+                    if(val == 123456789) {
+                        thread_param.success_read += ret;
+                    }
+                } else if (op == INSERT) {  // insert
+                    auto ret = index->put(key, 123456789, &paramI);
+                    thread_param.success_insert += ret;
+                }
+
+                if (latency_sample && i % latency_sample_interval == 0) {
+                    latency_sample_end_time = tn.rdtsc();
+                    thread_param.latency.push_back(std::make_pair(latency_sample_start_time, latency_sample_end_time));
+                }
+            }
+#pragma omp master
+            end_time = tn.rdtsc();
+} // all thread join here
+
+    //    });
+        auto diff = tn.tsc2ns(end_time) - tn.tsc2ns(start_time);
+        printf("Finish running\n");
+
+
+        // gather thread local variable
+        for (auto &p: params) {
+            if (latency_sample) {
+                for (auto e : p.latency) {
+                    auto temp = (tn.tsc2ns(e.first) - tn.tsc2ns(e.second)) / (double) 1000000000;
+                    stat.latency.push_back(tn.tsc2ns(e.second) - tn.tsc2ns(e.first));
+                }
+            }
+            stat.success_read += p.success_read;
+            stat.success_insert += p.success_insert;
+            stat.success_update += p.success_update;
+            stat.success_remove += p.success_remove;
+            stat.scan_not_enough += p.scan_not_enough;
+        }
+        // calculate throughput
+        stat.throughput = static_cast<uint64_t>(operations_num / (diff/(double) 1000000000));
+
+        // calculate dataset metric
+        if (dataset_statistic) {
+            std::sort(keys, keys + table_size);
+            stat.fitness_of_dataset = pgmMetric::PGM_metric(keys, table_size, error_bound);
+        }
+
+        // record memory consumption
+        if (memory_record)
+            stat.memory_consumption = index->memory_consumption();
+
+        print_stat();
+
+        delete[] thread_array;
+    }
+
 
     void print_stat(bool header = false, bool clear_flag = true) {
         double avg_latency = 0;
@@ -563,6 +705,25 @@ public:
                 index_t *index;
                 prepare(index, keys);
                 run(index);
+                if (index != nullptr) delete index;
+            }
+            COUT_THIS("--------------------");
+        }
+        // __itt_pause();
+    }
+
+    void run_benchmark_mrsw() {
+        load_keys();
+        generate_operations_mrsw(keys);
+        // __itt_resume();
+        for (auto s: all_index_type) {
+            COUT_THIS("index type: " << s);
+            for (auto t: all_thread_num) {
+                thread_num = stoi(t);
+                index_type = s;
+                index_t *index;
+                prepare(index, keys);
+                run_mrsw(index);
                 if (index != nullptr) delete index;
             }
             COUT_THIS("--------------------");
