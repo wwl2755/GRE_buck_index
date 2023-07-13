@@ -331,33 +331,51 @@ public:
             sample_ptr = get_search_keys_zipf(&init_keys[0], init_table_size, operations_num, &random_seed);
         }
 
-        assert(operations_num % thread_num == 0);
-        int operations_per_thread = operations_num / thread_num;
-        for (int p = 0; p < thread_num; ++p) {
-            operations_mrsw[p].reserve(operations_per_thread);
+        int operations_per_read = operations_num * read_ratio / (thread_num-1);
+        int operations_insert = operations_num * insert_ratio;
+
+        vector<int> ops_per_thread;
+        for (int p = 0; p < thread_num-2; ++p) {
+            ops_per_thread.push_back(operations_per_read);
+            operations_mrsw[p].reserve(ops_per_thread[p]);
         }
+
+        int last_reader_ops = operations_num - operations_insert - operations_per_read * (thread_num-2);
+        ops_per_thread.push_back(last_reader_ops);
+        operations_mrsw[thread_num-2].reserve(ops_per_thread[thread_num-2]);
+
+        ops_per_thread.push_back(operations_insert);
+        operations_mrsw[thread_num-1].reserve(ops_per_thread[thread_num-1]);
+
+
+        std::cout << "in generate_operations_mrsw: thread_num == " << thread_num << std::endl;
 
         // generate operations(read, insert, update, scan)
         COUT_THIS("generate operations.");
-        std::uniform_real_distribution<> ratio_dis(0, 1);
         size_t sample_counter = 0, insert_counter = init_table_size;
 
+        // generate read operations for the reader threads
         size_t temp_counter = 0;
-        for (size_t i = 0; i < operations_per_thread; ++i) {
-            // generate read opreations for each reader thread
-            for (int p = 0; p < thread_num - 1; p++) {
+        for (size_t i = 0; i < thread_num-1; ++i) {
+            for (int j = 0; j < ops_per_thread[i]; j++) {
                 if(i % 10 < 6) // 60% of the read operations are from the init keys
-                    operations_mrsw[p].push_back(std::pair<Operation, KEY_TYPE>(READ, sample_ptr[sample_counter++]));
+                    operations_mrsw[i].push_back(std::pair<Operation, KEY_TYPE>(READ, sample_ptr[sample_counter++]));
                 else
-                    operations_mrsw[p].push_back(std::pair<Operation, KEY_TYPE>(READ, keys[temp_counter++]));
+                    operations_mrsw[i].push_back(std::pair<Operation, KEY_TYPE>(READ, keys[temp_counter++]));
             }
-            
-            // generate write operations for the writer thread(the last thread)
+        }
+
+        // generate insert operations for the writer thread(the last thread)
+        for (int i = 0; i < ops_per_thread[thread_num-1]; i++) {
             if (insert_counter >= table_size) {
                     operations_num = i * thread_num;
                     break;
-                }
+            }
             operations_mrsw[thread_num - 1].push_back(std::pair<Operation, KEY_TYPE>(INSERT, keys[insert_counter++]));
+        }
+
+        for (int p = 0; p < thread_num; ++p) {
+            std::cout << p << ": operations_mrsw.size())" << operations_mrsw[p].size() << std::endl;
         }
 
         for (int p = 0; p < thread_num; ++p) {
@@ -444,6 +462,7 @@ public:
     //    });
         auto diff = tn.tsc2ns(end_time) - tn.tsc2ns(start_time);
         printf("Finish running\n");
+        std::cout << "Time: " << diff / (double) 1000000000 << "s" << std::endl;
 
 
         // gather thread local variable
@@ -486,11 +505,17 @@ public:
         printf("Begin running\n");
         auto start_time = tn.rdtsc();
         auto end_time = tn.rdtsc();
+        std::cout << "thread_num before parallel: " << thread_num << std::endl;
     //    System::profile("perf.data", [&]() {
 #pragma omp parallel num_threads(thread_num)
 {
             // thread specifier
             auto thread_id = omp_get_thread_num();
+            auto total_thread = omp_get_num_threads();
+            #pragma omp critical
+            {
+                std::cout << "Thread #" << thread_id << " start. Operations num: " << operations_mrsw[thread_id].size() << std::endl;
+            }
             auto paramI = Param(thread_num, thread_id,
                 bli_initial_filled_ratio,
                 0, 0, 0);
@@ -508,6 +533,7 @@ public:
 #pragma omp master
             start_time = tn.rdtsc();
 // running benchmark
+#pragma omp barrier
             for (auto i = 0; i < operations_mrsw[thread_id].size(); i++) {
                 auto op = operations_mrsw[thread_id][i].first;
                 auto key = operations_mrsw[thread_id][i].second;
@@ -538,6 +564,7 @@ public:
     //    });
         auto diff = tn.tsc2ns(end_time) - tn.tsc2ns(start_time);
         printf("Finish running\n");
+        std::cout << "Time: " << diff / (double) 1000000000 << "s" << std::endl;
 
 
         // gather thread local variable
@@ -714,12 +741,12 @@ public:
 
     void run_benchmark_mrsw() {
         load_keys();
-        generate_operations_mrsw(keys);
         // __itt_resume();
         for (auto s: all_index_type) {
             COUT_THIS("index type: " << s);
             for (auto t: all_thread_num) {
                 thread_num = stoi(t);
+                generate_operations_mrsw(keys);
                 index_type = s;
                 index_t *index;
                 prepare(index, keys);

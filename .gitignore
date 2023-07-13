@@ -9,6 +9,8 @@ release/*
 release*/
 resources
 resources/*
+dev*/
+dev*
 # result
 # result/*
 out.csv
