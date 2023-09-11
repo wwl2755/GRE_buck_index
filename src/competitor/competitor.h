@@ -12,6 +12,7 @@
 #include "./hot/hotrowex.h"
 #include "./lipp/lipp.h"
 #include "./lippol/lippol.h"
+#include "dili/dili.h"
 #include "pgm/pgm.h"
 #include "btree/btree.h"
 // #include "wormhole/wormhole.h"
@@ -108,6 +109,9 @@ indexInterface<KEY_TYPE, PAYLOAD_TYPE> *get_index(std::string index_type, Param 
   // else if (index_type == "wormhole_u64") {
   //   index = new WormholeU64Interface<KEY_TYPE, PAYLOAD_TYPE>;
   // }
+  else if ( index_type == "dili") {
+    index = new DILIIndexInterface<KEY_TYPE, PAYLOAD_TYPE>;
+  }
   else if( index_type == "hot") {
     index = new HotInterface<KEY_TYPE, PAYLOAD_TYPE>;
   }
