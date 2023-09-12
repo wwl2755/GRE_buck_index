@@ -197,14 +197,15 @@ template<class T>
 T *get_search_keys(T array[], int num_keys, int num_searches, size_t *seed = nullptr) {
     auto *keys = new T[num_searches];
 
-#pragma omp parallel
+// #pragma omp parallel
     {
         std::mt19937_64 gen(std::random_device{}());
         if (seed) {
-            gen.seed(*seed + omp_get_thread_num());
+            // gen.seed(*seed + omp_get_thread_num());
+            gen.seed(*seed);
         }
         std::uniform_int_distribution<int> dis(0, num_keys - 1);
-#pragma omp for
+// #pragma omp for
         for (int i = 0; i < num_searches; i++) {
             int pos = dis(gen);
             keys[i] = array[pos];
