@@ -5,7 +5,7 @@
 #include "./artsync/artolc.h"
 #include "./artsync/artunsync.h"
 #include "./buckindex/buckindex.h"
-#include "./buckindex/buckindex_concurrent.h"
+// #include "./buckindex/buckindex_concurrent.h"
 #include "./xindex/xindex.h"
 #include "./btreeolc/btreeolc.h"
 #include "./hot/hot.h"
