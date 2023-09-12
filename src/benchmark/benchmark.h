@@ -334,8 +334,8 @@ public:
 #pragma omp parallel num_threads(thread_num)
         {
             // thread specifier
-            // auto thread_id = omp_get_thread_num();
-            auto thread_id = 0;
+            auto thread_id = omp_get_thread_num();
+            // auto thread_id = 0;
             auto paramI = Param(thread_num, thread_id,
                 bli_initial_filled_ratio,
                 0, 0, 0);
