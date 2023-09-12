@@ -331,7 +331,7 @@ public:
         auto start_time = tn.rdtsc();
         auto end_time = tn.rdtsc();
     //    System::profile("perf.data", [&]() {
-// #pragma omp parallel num_threads(thread_num)
+#pragma omp parallel num_threads(thread_num)
         {
             // thread specifier
             // auto thread_id = omp_get_thread_num();
@@ -349,11 +349,11 @@ public:
             PAYLOAD_TYPE val;
             std::pair <KEY_TYPE, PAYLOAD_TYPE> *scan_result = new std::pair<KEY_TYPE, PAYLOAD_TYPE>[scan_num];
             // waiting all thread ready
-// #pragma omp barrier
-// #pragma omp master
+#pragma omp barrier
+#pragma omp master
             start_time = tn.rdtsc();
 // running benchmark
-// #pragma omp for schedule(dynamic, 10000)
+#pragma omp for schedule(dynamic, 10000)
             for (auto i = 0; i < operations_num; i++) {
                 auto op = operations[i].first;
                 auto key = operations[i].second;
@@ -393,7 +393,7 @@ public:
                     thread_param.latency.push_back(std::make_pair(latency_sample_start_time, latency_sample_end_time));
                 }
             } // omp for loop
-// #pragma omp master
+#pragma omp master
             end_time = tn.rdtsc();
         } // all thread join here
 
