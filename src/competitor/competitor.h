@@ -5,7 +5,7 @@
 #include "./artsync/artolc.h"
 #include "./artsync/artunsync.h"
 #include "./buckindex/buckindex.h"
-#include "./buckindex/buckindex_concurrent.h"
+// #include "./buckindex/buckindex_concurrent.h"
 #include "./xindex/xindex.h"
 #include "./btreeolc/btreeolc.h"
 #include "./hot/hot.h"
@@ -53,6 +53,8 @@ indexInterface<KEY_TYPE, PAYLOAD_TYPE> *get_index(std::string index_type, Param 
     else if (sbuck_size_ == 8 && dbuck_size_ == 1024) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 8, 1024>;
     else if (sbuck_size_ == 8 && dbuck_size_ == 2048) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 8, 2048>;
     else if (sbuck_size_ == 8 && dbuck_size_ == 4096) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 8, 4096>;
+    else if (sbuck_size_ == 8 && dbuck_size_ == 8192) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 8, 8192>;
+    else if (sbuck_size_ == 8 && dbuck_size_ == 16384) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 8, 16384>;
     else if (sbuck_size_ == 16 && dbuck_size_ == 32) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 16, 32>;
     else if (sbuck_size_ == 16 && dbuck_size_ == 64) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 16, 64>;
     else if (sbuck_size_ == 16 && dbuck_size_ == 128) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 16, 128>;
@@ -61,6 +63,8 @@ indexInterface<KEY_TYPE, PAYLOAD_TYPE> *get_index(std::string index_type, Param 
     else if (sbuck_size_ == 16 && dbuck_size_ == 1024) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 16, 1024>;
     else if (sbuck_size_ == 16 && dbuck_size_ == 2048) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 16, 2048>;
     else if (sbuck_size_ == 16 && dbuck_size_ == 4096) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 16, 4096>;
+    else if (sbuck_size_ == 16 && dbuck_size_ == 8192) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 16, 8192>;
+    else if (sbuck_size_ == 16 && dbuck_size_ == 16384) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 16, 16384>;
     else if (sbuck_size_ == 32 && dbuck_size_ == 32) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 32, 32>;
     else if (sbuck_size_ == 32 && dbuck_size_ == 64) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 32, 64>;
     else if (sbuck_size_ == 32 && dbuck_size_ == 128) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 32, 128>;
@@ -69,6 +73,8 @@ indexInterface<KEY_TYPE, PAYLOAD_TYPE> *get_index(std::string index_type, Param 
     else if (sbuck_size_ == 32 && dbuck_size_ == 1024) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 32, 1024>;
     else if (sbuck_size_ == 32 && dbuck_size_ == 2048) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 32, 2048>;
     else if (sbuck_size_ == 32 && dbuck_size_ == 4096) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 32, 4096>;
+    else if (sbuck_size_ == 32 && dbuck_size_ == 8192) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 32, 8192>;
+    else if (sbuck_size_ == 32 && dbuck_size_ == 16384) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 32, 16384>;
     else {
       std::cout << "Invalid bucket size.\n";
       exit(0);
@@ -77,31 +83,32 @@ indexInterface<KEY_TYPE, PAYLOAD_TYPE> *get_index(std::string index_type, Param 
 
     std::cout << "sbuck_size: " << sbuck_size_ << " dbuck_size: " << dbuck_size_ << std::endl;
     
-  } else if (index_type == "bli_concurrent") {
-    assert(param->sbuck_size == 8 || param->sbuck_size == 16 || param->sbuck_size == 32);
-    assert(param->dbuck_size == 32 || param->dbuck_size == 64 || param->dbuck_size == 128 || param->dbuck_size == 256);
-    int sbuck_size_ = param->sbuck_size;
-    int dbuck_size_ = param->dbuck_size;
+  } 
+  // else if (index_type == "bli_concurrent") {
+  //   assert(param->sbuck_size == 8 || param->sbuck_size == 16 || param->sbuck_size == 32);
+  //   assert(param->dbuck_size == 32 || param->dbuck_size == 64 || param->dbuck_size == 128 || param->dbuck_size == 256);
+  //   int sbuck_size_ = param->sbuck_size;
+  //   int dbuck_size_ = param->dbuck_size;
 
-    if (sbuck_size_ == 8 && dbuck_size_ == 32) index = new BLI_ConcurrentInterface<KEY_TYPE, PAYLOAD_TYPE, 8, 32>;
-    else if (sbuck_size_ == 8 && dbuck_size_ == 64) index = new BLI_ConcurrentInterface<KEY_TYPE, PAYLOAD_TYPE, 8, 64>;
-    else if (sbuck_size_ == 8 && dbuck_size_ == 128) index = new BLI_ConcurrentInterface<KEY_TYPE, PAYLOAD_TYPE, 8, 128>;
-    else if (sbuck_size_ == 8 && dbuck_size_ == 256) index = new BLI_ConcurrentInterface<KEY_TYPE, PAYLOAD_TYPE, 8, 256>;
-    else if (sbuck_size_ == 16 && dbuck_size_ == 32) index = new BLI_ConcurrentInterface<KEY_TYPE, PAYLOAD_TYPE, 16, 32>;
-    else if (sbuck_size_ == 16 && dbuck_size_ == 64) index = new BLI_ConcurrentInterface<KEY_TYPE, PAYLOAD_TYPE, 16, 64>;
-    else if (sbuck_size_ == 16 && dbuck_size_ == 128) index = new BLI_ConcurrentInterface<KEY_TYPE, PAYLOAD_TYPE, 16, 128>;
-    else if (sbuck_size_ == 16 && dbuck_size_ == 256) index = new BLI_ConcurrentInterface<KEY_TYPE, PAYLOAD_TYPE, 16, 256>;
-    else if (sbuck_size_ == 32 && dbuck_size_ == 32) index = new BLI_ConcurrentInterface<KEY_TYPE, PAYLOAD_TYPE, 32, 32>;
-    else if (sbuck_size_ == 32 && dbuck_size_ == 64) index = new BLI_ConcurrentInterface<KEY_TYPE, PAYLOAD_TYPE, 32, 64>;
-    else if (sbuck_size_ == 32 && dbuck_size_ == 128) index = new BLI_ConcurrentInterface<KEY_TYPE, PAYLOAD_TYPE, 32, 128>;
-    else if (sbuck_size_ == 32 && dbuck_size_ == 256) index = new BLI_ConcurrentInterface<KEY_TYPE, PAYLOAD_TYPE, 32, 256>;
-    else {
-      std::cout << "Invalid bucket size.\n";
-      exit(0);
-    }
+  //   if (sbuck_size_ == 8 && dbuck_size_ == 32) index = new BLI_ConcurrentInterface<KEY_TYPE, PAYLOAD_TYPE, 8, 32>;
+  //   else if (sbuck_size_ == 8 && dbuck_size_ == 64) index = new BLI_ConcurrentInterface<KEY_TYPE, PAYLOAD_TYPE, 8, 64>;
+  //   else if (sbuck_size_ == 8 && dbuck_size_ == 128) index = new BLI_ConcurrentInterface<KEY_TYPE, PAYLOAD_TYPE, 8, 128>;
+  //   else if (sbuck_size_ == 8 && dbuck_size_ == 256) index = new BLI_ConcurrentInterface<KEY_TYPE, PAYLOAD_TYPE, 8, 256>;
+  //   else if (sbuck_size_ == 16 && dbuck_size_ == 32) index = new BLI_ConcurrentInterface<KEY_TYPE, PAYLOAD_TYPE, 16, 32>;
+  //   else if (sbuck_size_ == 16 && dbuck_size_ == 64) index = new BLI_ConcurrentInterface<KEY_TYPE, PAYLOAD_TYPE, 16, 64>;
+  //   else if (sbuck_size_ == 16 && dbuck_size_ == 128) index = new BLI_ConcurrentInterface<KEY_TYPE, PAYLOAD_TYPE, 16, 128>;
+  //   else if (sbuck_size_ == 16 && dbuck_size_ == 256) index = new BLI_ConcurrentInterface<KEY_TYPE, PAYLOAD_TYPE, 16, 256>;
+  //   else if (sbuck_size_ == 32 && dbuck_size_ == 32) index = new BLI_ConcurrentInterface<KEY_TYPE, PAYLOAD_TYPE, 32, 32>;
+  //   else if (sbuck_size_ == 32 && dbuck_size_ == 64) index = new BLI_ConcurrentInterface<KEY_TYPE, PAYLOAD_TYPE, 32, 64>;
+  //   else if (sbuck_size_ == 32 && dbuck_size_ == 128) index = new BLI_ConcurrentInterface<KEY_TYPE, PAYLOAD_TYPE, 32, 128>;
+  //   else if (sbuck_size_ == 32 && dbuck_size_ == 256) index = new BLI_ConcurrentInterface<KEY_TYPE, PAYLOAD_TYPE, 32, 256>;
+  //   else {
+  //     std::cout << "Invalid bucket size.\n";
+  //     exit(0);
+  //   }
 
-    std::cout << "sbuck_size: " << sbuck_size_ << " dbuck_size: " << dbuck_size_ << std::endl;
-  }
+  //   std::cout << "sbuck_size: " << sbuck_size_ << " dbuck_size: " << dbuck_size_ << std::endl;
+  // }
   // else if (index_type == "wormhole") {
   //   index = new WormholeInterface<KEY_TYPE, PAYLOAD_TYPE>;
   // }

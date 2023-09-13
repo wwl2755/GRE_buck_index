@@ -136,7 +136,8 @@ public:
         }
 
         if (!data_shift) {
-            tbb::parallel_sort(keys, keys + table_size);
+            std::sort(keys, keys + table_size);
+            // tbb::parallel_sort(keys, keys + table_size);
             auto last = std::unique(keys, keys + table_size);
             table_size = last - keys;
             std::shuffle(keys, keys + table_size, gen);
@@ -153,16 +154,17 @@ public:
         // prepare data
         COUT_THIS("prepare init keys.");
         init_keys.resize(init_table_size);
-#pragma omp parallel for num_threads(thread_num)
+// #pragma omp parallel for num_threads(thread_num)
         for (size_t i = 0; i < init_table_size; ++i) {
             init_keys[i] = (keys[i]);
         }
-        tbb::parallel_sort(init_keys.begin(), init_keys.end());
+        std::sort(init_keys.begin(), init_keys.end());
+        // tbb::parallel_sort(init_keys.begin(), init_keys.end());
 
         std::cout << "Init keys: min = " << init_keys[0] << ", max = " << init_keys[init_keys.size() - 1] << std::endl;
 
         init_key_values = new std::pair<KEY_TYPE, PAYLOAD_TYPE>[init_keys.size()];
-#pragma omp parallel for num_threads(thread_num)
+// #pragma omp parallel for num_threads(thread_num)
         for (int i = 0; i < init_keys.size(); i++) {
             init_key_values[i].first = init_keys[i];
             init_key_values[i].second = 123456789; // TODO: change to key
@@ -333,6 +335,7 @@ public:
         {
             // thread specifier
             auto thread_id = omp_get_thread_num();
+            // auto thread_id = 0;
             auto paramI = Param(thread_num, thread_id,
                 bli_initial_filled_ratio,
                 0, 0, 0);
@@ -552,6 +555,7 @@ public:
     }
 
     void run_benchmark() {
+        // __itt_domain* domain = __itt_domain_create("MyDomain");
         load_keys();
         generate_operations(keys);
         // __itt_resume();
@@ -562,7 +566,10 @@ public:
                 index_type = s;
                 index_t *index;
                 prepare(index, keys);
+                // __itt_string_handle* task = __itt_string_handle_create("MyTask");
+                // __itt_task_begin(domain, __itt_null, __itt_null, task);
                 run(index);
+                // __itt_task_end(domain);
                 if (index != nullptr) delete index;
             }
             COUT_THIS("--------------------");
