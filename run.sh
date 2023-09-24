@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # dataset
-datasets="books"
+datasets="books fb osm"
 
 # Read/Insert ratios
 ratios="1:0"
@@ -30,14 +30,12 @@ for ratio in $ratios; do
             done
         done
 
-        # # others
-        # for index in $indexes; do
-        #     for c in $cores; do
-        #         command="taskset -c $c ./microbench --keys_file=../datasets/${dataset} --keys_file_type=binary --read=${ratio%:*} --insert=${ratio#*:} --operations_num=100000000 --table_size=200000000 --init_table_ratio=0.5 --thread_num=1 --index=${index} --memory"
-        #         echo "command is $command"
-        #         taskset -c $c $command
-        #         sleep 1
-        #     done
-        # done
+        # others
+        for index in $indexes; do
+            command="numactl --cpunodebind=0 --membind=0 ./microbench --keys_file=../datasets/${dataset} --keys_file_type=binary --read=${ratio%:*} --insert=${ratio#*:} --operations_num=100000000 --table_size=200000000 --init_table_ratio=0.5 --thread_num=1 --index=${index} --memory"
+            echo "command is $command"
+            $command
+            sleep 1
+        done
     done
 done
