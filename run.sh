@@ -1,12 +1,7 @@
 #!/bin/sh
 
 # dataset
-<<<<<<< HEAD
-# datasets="books fb osm"
-datasets="fb"
-=======
 datasets="books fb osm"
->>>>>>> 9b8f11ddd16cb3fae539629e4638eec2482b1203
 
 # Read/Insert ratios
 ratios="1:0"
@@ -22,25 +17,28 @@ dbuck_sizes="16384"
 indexes="alex lipp finedex pgm"
 
 # # Iterate the string array using for loop
-for ratio in $ratios; do
-    for dataset in $datasets; do
-        # bli
-        for sbuck_size in $sbuck_sizes; do
-            for dbuck_size in $dbuck_sizes; do
-                    command="numactl --cpunodebind=0 --membind=0  ./microbench --keys_file=../datasets/${dataset} --keys_file_type=binary --read=${ratio%:*} --insert=${ratio#*:} --operations_num=100000000 --table_size=200000000 --init_table_ratio=0.5 --thread_num=1 --index=buckindex --memory --bli_sbuck_size=${sbuck_size} --bli_dbuck_size=${dbuck_size} --bli_initial_filled_ratio=0.6  --error_bound=4.8"
-                    echo "command is $command"
-                    $command
-                    sleep 1
-                done
-            done
-        done
+# for ratio in $ratios; do
+#     for dataset in $datasets; do
+#         # bli
+#         for sbuck_size in $sbuck_sizes; do
+#             for dbuck_size in $dbuck_sizes; do
+#                     command="numactl --cpunodebind=0 --membind=0  ./microbench --keys_file=../datasets/${dataset} --keys_file_type=binary --read=${ratio%:*} --insert=${ratio#*:} --operations_num=100000000 --table_size=200000000 --init_table_ratio=0.5 --thread_num=1 --index=buckindex --memory --bli_sbuck_size=${sbuck_size} --bli_dbuck_size=${dbuck_size} --bli_initial_filled_ratio=0.6  --error_bound=4.8"
+#                     echo "command is $command"
+#                     $command
+#                     sleep 1
+#                 done
+#             done
+#         done
 
-        # others
-        for index in $indexes; do
-            command="numactl --cpunodebind=0 --membind=0 ./microbench --keys_file=../datasets/${dataset} --keys_file_type=binary --read=${ratio%:*} --insert=${ratio#*:} --operations_num=100000000 --table_size=200000000 --init_table_ratio=0.5 --thread_num=1 --index=${index} --memory"
-            echo "command is $command"
-            $command
-            sleep 1
-        done
-    done
-done
+#         # others
+#         for index in $indexes; do
+#             command="numactl --cpunodebind=0 --membind=0 ./microbench --keys_file=../datasets/${dataset} --keys_file_type=binary --read=${ratio%:*} --insert=${ratio#*:} --operations_num=100000000 --table_size=200000000 --init_table_ratio=0.5 --thread_num=1 --index=${index} --memory"
+#             echo "command is $command"
+#             $command
+#             sleep 1
+#         done
+#     done
+# done
+
+# rm -rf data/
+# numactl --cpunodebind=0 --membind=0 ./microbench --keys_file=../datasets/books --keys_file_type=binary --read=1 --insert=0 --operations_num=1000000000 --table_size=20000000 --init_table_ratio=0.5 --thread_num=1 --index=dili --memory
