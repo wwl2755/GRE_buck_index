@@ -70,6 +70,7 @@ class Benchmark {
     std::vector <KEY_TYPE> init_keys;
     KEY_TYPE *keys;
     std::pair <KEY_TYPE, PAYLOAD_TYPE> *init_key_values;
+    size_t init_key_values_size;
     std::vector <std::pair<Operation, KEY_TYPE>> operations;
     std::mt19937 gen;
 
@@ -172,6 +173,9 @@ public:
         COUT_VAR(table_size);
         COUT_VAR(init_keys.size());
 
+        init_key_values_size = init_keys.size();
+        init_keys.clear();
+
         return keys;
     }
 
@@ -193,7 +197,7 @@ public:
         long time = 0;
         gettimeofday(&startTime, 0);
 
-        index->bulk_load(init_key_values, init_keys.size(), &param);
+        index->bulk_load(init_key_values, init_key_values_size, &param);
 
         gettimeofday(&endTime, 0);
         time += (endTime.tv_sec - startTime.tv_sec) * 1000000 + (endTime.tv_usec - startTime.tv_usec);
@@ -320,6 +324,7 @@ public:
         COUT_VAR(operations.size());
 
         delete[] sample_ptr;
+        delete[] keys;
     }
 
     void run(index_t *index) {
@@ -574,6 +579,8 @@ public:
             }
             COUT_THIS("--------------------");
         }
+
+        delete[] init_key_values;
         // __itt_pause();
     }
 
