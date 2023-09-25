@@ -1,7 +1,8 @@
 #!/bin/sh
 
 # dataset
-datasets="books fb osm"
+datasets="books"
+# datasets="books fb osm"
 
 # Read/Insert ratios
 ratios="1:0"
@@ -26,7 +27,6 @@ for ratio in $ratios; do
                     echo "command is $command"
                     $command
                     sleep 1
-                done
             done
         done
 
