@@ -92,6 +92,8 @@ message(STATUS "BUCKINDEX_USE_SIMD: ${BUCKINDEX_USE_SIMD}")
 if(BUCKINDEX_NOT_USE_LINEAR_REGRESSION)
     remove_definitions(-DBUCKINDEX_USE_LINEAR_REGRESSION)
 endif()
+# output if BUCKINDEX_USE_LINEAR_REGRESSION is defined
+message(STATUS "BUCKINDEX_NOT_USE_LINEAR_REGRESSION: ${BUCKINDEX_NOT_USE_LINEAR_REGRESSION}")
 
 # add_subdirectory(src/competitor/wormhole)
 # add_subdirectory(src/competitor/wormhole_u64)
