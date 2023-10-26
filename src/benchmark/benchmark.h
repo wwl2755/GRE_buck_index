@@ -202,7 +202,7 @@ public:
         gettimeofday(&endTime, 0);
         time += (endTime.tv_sec - startTime.tv_sec) * 1000000 + (endTime.tv_usec - startTime.tv_usec);
         COUT_THIS("[bulk loading time]: " << time / 1000000.0 << "s");
-        COUT_THIS("[bulk loading throughput]: " << static_cast<uint64_t>(init_keys.size() / (time / 1000000.0)) << " keys/sec");
+        COUT_THIS("[bulk loading throughput]: " << static_cast<uint64_t>(init_key_values_size / (time / 1000000.0)) << " keys/sec");
     }
 
     /*
