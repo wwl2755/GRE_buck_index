@@ -37,6 +37,6 @@
 	path = src/competitor/buckindex/src
 	url = git@github.com:gdymind/BuckIndex.git
 
-[submodule "/home/huibing/GRE_buck_index/src/competitor/dili/src"]
-	path = /home/huibing/GRE_buck_index/src/competitor/dili/src
+[submodule "src/competitor/dili/src"]
+	path = src/competitor/dili/src
 	url = git@github.com:gdymind/DILI_fork.git
