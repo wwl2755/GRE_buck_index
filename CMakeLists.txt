@@ -43,7 +43,7 @@ message(STATUS "VTune ADVISOR_LIB: ${ADVISOR_LIB}")
 message(STATUS "VTune ITTNOTIFY_LIB: ${ITTNOTIFY_LIB}")
 message(STATUS "VTune JITPROFILING_LIB: ${JITPROFILING_LIB}")
 
-add_compile_options(-faligned-new -march=native -g -pg -O3 -w)
+add_compile_options(-faligned-new -march=native -g -O3)
 add_compile_options(-lpthread -mpopcnt -O3 -march=native -mlzcnt -mcmodel=large -fpermissive) # dili
 
 
