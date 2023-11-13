@@ -1,3 +1,4 @@
+set(CMAKE_CXX_COMPILER "g++-9")
 cmake_minimum_required (VERSION 3.14)
 project (GRE)
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
@@ -24,6 +25,15 @@ include_directories(${CMAKE_SOURCE_DIR}/src/competitor/buckindex/src/include)
 include_directories(${CMAKE_SOURCE_DIR}/src/competitor/buckindex/src/src)
 include_directories(/opt/intel/oneapi/vtune/latest/sdk/include/) # vtune headers
 
+add_subdirectory(${CMAKE_SOURCE_DIR}/src/competitor/dili/src/src/global)
+add_subdirectory(${CMAKE_SOURCE_DIR}/src/competitor/dili/src/src/utils)
+add_subdirectory(${CMAKE_SOURCE_DIR}/src/competitor/dili/src/src/dili)
+add_subdirectory(${CMAKE_SOURCE_DIR}/src/competitor/dili/src/src/butree)
+include_directories(${CMAKE_SOURCE_DIR}/src/competitor/dili/src/src/global)
+include_directories(${CMAKE_SOURCE_DIR}/src/competitor/dili/src/src/utils)
+include_directories(${CMAKE_SOURCE_DIR}/src/competitor/dili/src/src/dili)
+include_directories(${CMAKE_SOURCE_DIR}/src/competitor/dili/src/src/butree)
+
 # vtune libraries
 set(VTUNE_LIB_PATH /opt/intel/oneapi/vtune/latest/sdk)
 find_library(ADVISOR_LIB NAMES advisor PATHS ${VTUNE_LIB_PATH}/lib64 ${VTUNE_LIB_PATH}/lib32 NO_DEFAULT_PATH)
@@ -33,7 +43,8 @@ message(STATUS "VTune ADVISOR_LIB: ${ADVISOR_LIB}")
 message(STATUS "VTune ITTNOTIFY_LIB: ${ITTNOTIFY_LIB}")
 message(STATUS "VTune JITPROFILING_LIB: ${JITPROFILING_LIB}")
 
-add_compile_options(-faligned-new -march=native -g -pg -O3)
+add_compile_options(-faligned-new -march=native -g -O3)
+add_compile_options(-lpthread -mpopcnt -O3 -march=native -mlzcnt -mcmodel=large -fpermissive) # dili
 
 
 # hint options
@@ -53,6 +64,9 @@ elseif(HINT_MODE STREQUAL "no_hash")
 else()
     message(STATUS "HINT_MODE variable is not set or not valid. Default configuration murmur_hash will be used.")
 endif()
+
+# output the HINT_MODE
+message(STATUS "HINT_MODE: ${HINT_MODE}")
 
 
 option(BUCKINDEX_DEBUG "Enable debug mode for BuckIndex" OFF)
@@ -78,6 +92,8 @@ message(STATUS "BUCKINDEX_USE_SIMD: ${BUCKINDEX_USE_SIMD}")
 if(BUCKINDEX_NOT_USE_LINEAR_REGRESSION)
     remove_definitions(-DBUCKINDEX_USE_LINEAR_REGRESSION)
 endif()
+# output if BUCKINDEX_USE_LINEAR_REGRESSION is defined
+message(STATUS "BUCKINDEX_NOT_USE_LINEAR_REGRESSION: ${BUCKINDEX_NOT_USE_LINEAR_REGRESSION}")
 
 # add_subdirectory(src/competitor/wormhole)
 # add_subdirectory(src/competitor/wormhole_u64)
@@ -102,4 +118,10 @@ target_link_libraries(microbench
         ${MKL_LIBRARIES} ${TBB_LIBRARIES}
         ${ADVISOR_LIB} ${ITTNOTIFY_LIB} ${JITPROFILING_LIB}
         dl
+        # dili libraries
+        dili_func
+        butree_func
+        global_func
+        utils_func
+        stdc++fs
 )
