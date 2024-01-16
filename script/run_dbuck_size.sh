@@ -1,21 +1,23 @@
 #!/bin/sh
 
 # dataset
-datasets="books"
-# datasets="books fb osm"
+# datasets="books"
+datasets="fb osm books"
 
 # Read/Insert ratios
-ratios="1:0"
-# ratios="1:0 0:1 0.5:0.5"
+# ratios="1:0"
+ratios="1:0 0:1 0.5:0.5"
 
 # # sbuck_sizes
+# sbuck_sizes="2 4"
 sbuck_sizes="1 2 4 8 16 32"
 
 # dbuck_sizes
-dbuck_sizes="16384 32768 65536 131072 262144 524288 1048576 2097152 4194304 8388608 16777216 33554432"
+dbuck_sizes="16384 32768 65536 131072 262144 524288 1048576 2097152 4194304 8388608 10485760 12582912 14680064 16777216 33554432"
+# dbuck_sizes="10485760 12582912 14680064"
 
 #indexes
-indexes="alex"
+indexes=""
 
 # # Iterate the string array using for loop
 for ratio in $ratios; do
