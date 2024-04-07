@@ -106,6 +106,10 @@ add_executable(microbench
         ${CMAKE_CURRENT_SOURCE_DIR}/src/benchmark/microbench.cpp
     )
 
+add_executable(microbench_read_after_write
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/benchmark/microbench_read_after_write.cpp
+    )
+
 # target_link_libraries(microbench
 #         PRIVATE
 #         # WORMHOLE
@@ -114,6 +118,19 @@ add_executable(microbench
 # )
 
 target_link_libraries(microbench
+        PUBLIC OpenMP::OpenMP_CXX ${JEMALLOC_LIBRARIES}
+        ${MKL_LIBRARIES} ${TBB_LIBRARIES}
+        ${ADVISOR_LIB} ${ITTNOTIFY_LIB} ${JITPROFILING_LIB}
+        dl
+        # dili libraries
+        dili_func
+        butree_func
+        global_func
+        utils_func
+        stdc++fs
+)
+
+target_link_libraries(microbench_read_after_write
         PUBLIC OpenMP::OpenMP_CXX ${JEMALLOC_LIBRARIES}
         ${MKL_LIBRARIES} ${TBB_LIBRARIES}
         ${ADVISOR_LIB} ${ITTNOTIFY_LIB} ${JITPROFILING_LIB}
