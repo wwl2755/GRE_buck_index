@@ -12,13 +12,18 @@ struct Param {
   size_t sbuck_size;
   size_t dbuck_size;
   int error_bound;
+  int merge_n_smo_threshold;
+  int merge_window_size;
 
   Param(size_t worker_num, uint32_t thread_id,
         double initial_filled_ratio,
-        size_t sbuck_size, size_t dbuck_size, int error_bound)
+        size_t sbuck_size, size_t dbuck_size, int error_bound
+        , int merge_n_smo_threshold, int merge_window_size)
           : worker_num(worker_num), thread_id(thread_id),
             initial_filled_ratio(initial_filled_ratio),
-            sbuck_size(sbuck_size), dbuck_size(dbuck_size), error_bound(error_bound) {}
+            sbuck_size(sbuck_size), dbuck_size(dbuck_size), error_bound(error_bound),
+            merge_n_smo_threshold(merge_n_smo_threshold), merge_window_size(merge_window_size)
+            {}
 };
 
 struct BaseCompare {

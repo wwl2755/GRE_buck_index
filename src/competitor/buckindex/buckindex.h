@@ -10,7 +10,7 @@ class BuckIndexInterface : public indexInterface<KEY_TYPE, PAYLOAD_TYPE> {
 public:
   using KeyValueType = buckindex::KeyValue<KEY_TYPE, PAYLOAD_TYPE>;
   void init(Param *param = nullptr){
-    idx.init(param->initial_filled_ratio, param->error_bound);
+    idx.init(param->initial_filled_ratio, param->error_bound, param->merge_n_smo_threshold, param->merge_window_size);
   }
 
   void bulk_load(std::pair <KEY_TYPE, PAYLOAD_TYPE> *key_value, size_t num, Param *param = nullptr);

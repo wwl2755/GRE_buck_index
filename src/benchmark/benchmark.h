@@ -66,6 +66,8 @@ class Benchmark {
     double bli_initial_filled_ratio = 0.5;
     size_t bli_sbuck_size = 8;
     size_t bli_dbuck_size = 256;
+    int bli_merge_n_smo_threshold = 2;
+    int bli_merge_window_size = 2;
 
     std::vector <KEY_TYPE> init_keys;
     KEY_TYPE *keys;
@@ -189,7 +191,8 @@ public:
         // initilize Index (sort keys first)
         Param param = Param(thread_num, 0,
             bli_initial_filled_ratio,
-            bli_sbuck_size, bli_dbuck_size, error_bound);
+            bli_sbuck_size, bli_dbuck_size, error_bound,
+            bli_merge_n_smo_threshold, bli_merge_window_size);
         
         index = get_index<KEY_TYPE, PAYLOAD_TYPE>(index_type, &param);
         index->init(&param);
@@ -260,6 +263,8 @@ public:
         bli_initial_filled_ratio = stod(get_with_default(flags, "bli_initial_filled_ratio", "0.5"));
         bli_sbuck_size = stoi(get_with_default(flags, "bli_sbuck_size", "8"));
         bli_dbuck_size = stoi(get_with_default(flags, "bli_dbuck_size", "256"));
+        bli_merge_n_smo_threshold = stoi(get_with_default(flags, "bli_merge_n_smo_threshold", "2"));
+        bli_merge_window_size = stoi(get_with_default(flags, "bli_merge_window_size", "2"));
 
         COUT_THIS("[micro] Read:Insert:Update:Scan:Delete= " << read_ratio << ":" << insert_ratio << ":" << update_ratio << ":"
                                                       << scan_ratio << ":" << delete_ratio);
@@ -397,7 +402,8 @@ public:
             // auto thread_id = 0;
             auto paramI = Param(thread_num, thread_id,
                 bli_initial_filled_ratio,
-                0, 0, 0);
+                0, 0, 0,
+                0, 0);
             // Latency Sample Variable
             int latency_sample_interval = operations_num / (operations_num * latency_sample_ratio);
             auto latency_sample_start_time = tn.rdtsc();
@@ -511,7 +517,8 @@ public:
             // auto thread_id = 0;
             auto paramI = Param(thread_num, thread_id,
                 bli_initial_filled_ratio,
-                0, 0, 0);
+                0, 0, 0,
+                0, 0);
             // Latency Sample Variable
             int latency_sample_interval = operations_num / (operations_num * latency_sample_ratio);
             auto latency_sample_start_time = tn.rdtsc();
@@ -703,6 +710,7 @@ public:
             std::ofstream ofile;
             ofile.open(output_path, std::ios::app);
             ofile << "id" << ",";
+            ofile << "operations_num" << ",";
             ofile << "read_ratio" << "," << "insert_ratio" << "," << "update_ratio" << "," << "scan_ratio" << "," << "delete_ratio" << ",";
             ofile << "key_path" << ",";
             ofile << "index_type" << ",";
@@ -745,6 +753,7 @@ public:
         if (std::strftime(time_str, sizeof(time_str), "%Y%m%d%H%M%S", std::localtime(&t))) {
             ofile << time_str << ',';
         }
+        ofile << operations_num << ",";
         ofile << read_ratio << "," << insert_ratio << "," << update_ratio << "," << scan_ratio << "," << delete_ratio << ",";
 
         ofile << keys_file_path << ",";
