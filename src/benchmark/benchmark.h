@@ -703,6 +703,7 @@ public:
             std::ofstream ofile;
             ofile.open(output_path, std::ios::app);
             ofile << "id" << ",";
+            ofile << "operations_num" << ",";
             ofile << "read_ratio" << "," << "insert_ratio" << "," << "update_ratio" << "," << "scan_ratio" << "," << "delete_ratio" << ",";
             ofile << "key_path" << ",";
             ofile << "index_type" << ",";
@@ -745,6 +746,7 @@ public:
         if (std::strftime(time_str, sizeof(time_str), "%Y%m%d%H%M%S", std::localtime(&t))) {
             ofile << time_str << ',';
         }
+        ofile << operations_num << ",";
         ofile << read_ratio << "," << insert_ratio << "," << update_ratio << "," << scan_ratio << "," << delete_ratio << ",";
 
         ofile << keys_file_path << ",";

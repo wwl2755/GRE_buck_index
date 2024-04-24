@@ -28,3 +28,7 @@ sudo apt install numactl
 echo off | sudo tee /sys/devices/system/cpu/smt/control
 # turn hyper-thereading back on
 # echo on | sudo tee /sys/devices/system/cpu/smt/control
+
+
+#install g++-9
+sudo apt install g++-9
