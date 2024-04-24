@@ -395,6 +395,10 @@ public:
         int operations_per_read = operations_num * read_ratio / (thread_num-1);
         int operations_insert = operations_num * insert_ratio;
 
+        for (int p = 0; p < thread_num; ++p) {
+            operations_mrsw[p].clear();
+        }
+
         vector<int> ops_per_thread;
         for (int p = 0; p < thread_num-2; ++p) {
             ops_per_thread.push_back(operations_per_read);
@@ -436,7 +440,7 @@ public:
         }
 
         for (int p = 0; p < thread_num; ++p) {
-            std::cout << p << ": operations_mrsw.size())" << operations_mrsw[p].size() << std::endl;
+            std::cout << p << ": operations_mrsw.size()" << operations_mrsw[p].size() << std::endl;
         }
 
         for (int p = 0; p < thread_num; ++p) {
@@ -873,6 +877,7 @@ public:
             ofile << "read_ratio" << "," << "insert_ratio" << "," << "update_ratio" << "," << "scan_ratio" << "," << "delete_ratio" << ",";
             ofile << "key_path" << ",";
             ofile << "index_type" << ",";
+            ofile << "thread_num" << ",";
             ofile << "throughput" << ",";
             ofile << "throughput_read" << ",";
             ofile << "throughput_write" << ",";
@@ -916,6 +921,7 @@ public:
 
         ofile << keys_file_path << ",";
         ofile << index_type << ",";
+        ofile << thread_num << ",";
         ofile << stat.throughput << ",";
         ofile << stat.throughput_read << ",";
         ofile << stat.throughput_write << ",";
