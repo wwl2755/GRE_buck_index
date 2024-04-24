@@ -29,13 +29,11 @@ for ratio in $ratios; do
                     sleep 1
             done
         done
-
-        # # others
-        # for index in $indexes; do
-        #     command="numactl --cpunodebind=0 --membind=0 ./microbench --keys_file=../datasets/${dataset} --keys_file_type=binary --read=${ratio%:*} --insert=${ratio#*:} --operations_num=100000000 --table_size=200000000 --init_table_ratio=0.5 --thread_num=1 --index=${index} --memory"
-        #     echo "command is $command"
-        #     $command
-        #     sleep 1
-        # done
     done
 done
+
+# for ratio in $ratios; do
+#     for dataset in $datasets; do
+#         ./release/microbench --keys_file=./datasets/${dataset} --keys_file_type=binary --read=${ratio%:*} --insert=${ratio#*:} --operations_num=100000000 --table_size=200000000 --init_table_ratio=0.25 --thread_num=1 --index=alex,alexol --memory
+#     done
+# done
