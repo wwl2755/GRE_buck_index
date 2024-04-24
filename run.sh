@@ -2,26 +2,35 @@
 
 # dataset
 datasets="books"
+# datasets="books fb osm"
 
 # Read/Insert ratios
-ratios="1:0 0:1 0.5:0.5"
+ratios="1:0"
+# ratios="1:0 0:1 0.5:0.5"
 
-# sbuck_sizes
+# # sbuck_sizes
 sbuck_sizes="8"
 
 # dbuck_sizes
-dbuck_sizes="4096"
+dbuck_sizes="16384"
+
+#indexes
+indexes="alex lipp finedex pgm"
 
 # # Iterate the string array using for loop
-# for ratio in $ratios; do
-#     for dataset in $datasets; do
-#         for sbuck_size in $sbuck_sizes; do
-#             for dbuck_size in $dbuck_sizes; do
-#                 ./release/microbench --keys_file=./datasets/${dataset} --keys_file_type=binary --read=${ratio%:*} --insert=${ratio#*:} --operations_num=10000000 --table_size=20000000 --init_table_ratio=0.5 --thread_num=1 --index=buckindex --memory --bli_sbuck_size=${sbuck_size} --bli_dbuck_size=${dbuck_size}
-#             done
-#         done
-#     done
-# done
+for ratio in $ratios; do
+    for dataset in $datasets; do
+        # bli
+        for sbuck_size in $sbuck_sizes; do
+            for dbuck_size in $dbuck_sizes; do
+                    command="numactl --cpunodebind=0 --membind=0  ./microbench --keys_file=../datasets/${dataset} --keys_file_type=binary --read=${ratio%:*} --insert=${ratio#*:} --operations_num=100000000 --table_size=200000000 --init_table_ratio=0.5 --thread_num=1 --index=buckindex --memory --bli_sbuck_size=${sbuck_size} --bli_dbuck_size=${dbuck_size} --bli_initial_filled_ratio=0.6  --error_bound=4.8"
+                    echo "command is $command"
+                    $command
+                    sleep 1
+            done
+        done
+    done
+done
 
 # for ratio in $ratios; do
 #     for dataset in $datasets; do
@@ -30,7 +39,7 @@ dbuck_sizes="4096"
 # done
 
 
-./bench_mrsw --keys_file=../datasets/books --keys_file_type=binary --read=1 --insert=0 --operations_num=100000000 --table_size=200000000 --init_table_ratio=0.5 --thread_num=1,2,3,4,5 --index=buckindex --memory --bli_sbuck_size=8 --bli_dbuck_size=4096 --error_bound=16
+./bench_mrsw --output_path=./mrsw.csv --keys_file=../datasets/books --keys_file_type=binary --read=1 --insert=0 --operations_num=100000000 --table_size=200000000 --init_table_ratio=0.5 --thread_num=2,3,4,5 --index=buckindex --memory --bli_sbuck_size=4 --bli_dbuck_size=16384  --bli_initial_filled_ratio=0.6  --error_bound=4.8
 # ./microbench --keys_file=../datasets/fb --keys_file_type=binary --read=1 --insert=0 --operations_num=100000000 --table_size=200000000 --init_table_ratio=0.5 --thread_num=1 --index=buckindex --memory --bli_sbuck_size=8 --bli_dbuck_size=256
 # ./release/microbench --keys_file=./datasets/books --keys_file_type=binary --read=0 --insert=1 --operations_num=20000000 --table_size=20000000 --init_table_ratio=0.001 --thread_num=1 --index=buckindex --memory --bli_sbuck_size=8 --bli_dbuck_size=256
 # ./release/microbench --keys_file=./datasets/books --keys_file_type=binary --read=0 --insert=1 --operations_num=10000000 --table_size=20000000 --init_table_ratio=0.001 --thread_num=1 --index=alex --memory

@@ -82,8 +82,8 @@ cmake .. -DCMAKE_BUILD_TYPE=Release && make
 
 ### Build with alternative design choices
 ```
-# not using simd
-cmake .. -DBUCKINDEX_NOT_USE_SIMD=ON -DCMAKE_BUILD_TYPE=Release && make
+# using simd
+cmake .. -DBUCKINDEX_USE_SIMD=ON -DCMAKE_BUILD_TYPE=Release && make
 
 # not using linear regression; using endpoint linear model instead
 cmake .. -DBUCKINDEX_NOT_USE_LINEAR_REGRESSION=ON -DCMAKE_BUILD_TYPE=Release && make
