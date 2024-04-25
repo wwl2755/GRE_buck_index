@@ -903,11 +903,9 @@ public:
             ofile << "table_size" << ",";
 
             // if index_type == buckindex, output its parameters
-            if (index_type == "buckindex") {
-                ofile << "bli_initial_filled_ratio" << ",";
-                ofile << "bli_sbuck_size" << ",";
-                ofile << "bli_dbuck_size" << ",";
-            }
+            ofile << "bli_initial_filled_ratio" << ",";
+            ofile << "bli_sbuck_size" << ",";
+            ofile << "bli_dbuck_size" << ",";
             ofile << std::endl;
             
             std::cout << std::endl;
@@ -961,6 +959,10 @@ public:
             ofile << bli_initial_filled_ratio << ",";
             ofile << bli_sbuck_size << ",";
             ofile << bli_dbuck_size << ",";
+        } else {
+            ofile << 0 << ",";
+            ofile << 0 << ",";
+            ofile << 0 << ",";
         }
         ofile << std::endl;
         ofile.close();
