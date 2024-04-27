@@ -742,6 +742,8 @@ public:
                 ofile << "bli_initial_filled_ratio" << ",";
                 ofile << "bli_sbuck_size" << ",";
                 ofile << "bli_dbuck_size" << ",";
+                ofile << "bli_merge_n_smo_threshold" << ",";
+                ofile << "bli_merge_window_size" << ",";
             }
             ofile << std::endl;
             
@@ -795,6 +797,8 @@ public:
             ofile << bli_initial_filled_ratio << ",";
             ofile << bli_sbuck_size << ",";
             ofile << bli_dbuck_size << ",";
+            ofile << bli_merge_n_smo_threshold << ",";
+            ofile << bli_merge_window_size << ",";
         }
         ofile << std::endl;
         ofile.close();
