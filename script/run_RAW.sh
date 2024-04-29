@@ -26,7 +26,7 @@ for ratio in $ratios; do
                 for dbuck_size in $dbuck_sizes; do
                     command="numactl --cpunodebind=0 --membind=0  ./microbench_read_after_write --keys_file=../datasets/${dataset} --keys_file_type=binary --read=${ratio%:*} --insert=${ratio#*:} --operations_num=${operations_num} --table_size=200000000 --init_table_ratio=0.05 --thread_num=1 --index=buckindex --memory --bli_sbuck_size=${sbuck_size} --bli_dbuck_size=${dbuck_size} --bli_initial_filled_ratio=0.6  --error_bound=4.8 --bli_merge_n_smo_threshold=2 --bli_merge_window_size=2"
                     echo "command is $command"  >> RAW.txt
-                    $command >> RAWt.txt
+                    $command >> RAW.txt
                 done
             done
         done
