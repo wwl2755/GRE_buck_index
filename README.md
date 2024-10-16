@@ -164,7 +164,7 @@ git push origin <branch-name>
 Install related driver to get more analysis:
 ```
 cd /opt/intel/oneapi/vtune/latest/sepdk/src
-make
+sudo make
 sudo insmod sep.ko
 ```
 Run vtune:
