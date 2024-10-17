@@ -548,6 +548,12 @@ public:
         // calculate throughput
         stat.throughput = static_cast<uint64_t>(operations_num / (diff/(double) 1000000000));
 
+        // special case for scan
+        if (scan_ratio > 0.9) {
+            uint64_t total_keys = operations_num * scan_num;
+            stat.throughput = static_cast<uint64_t>(total_keys / (diff/(double) 1000000000));
+        }
+
         // calculate dataset metric
         if (dataset_statistic) {
             std::sort(keys, keys + table_size);
