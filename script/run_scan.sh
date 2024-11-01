@@ -1,24 +1,19 @@
 #!/bin/sh
 
 # dataset
-# datasets="books fb osm"
 datasets="books"
 
 # scan nums
-# scan_nums="10000 100000"
-scan_nums="1000000"
+scan_nums="100 1000 10000 100000 1000000"
 
 # # sbuck_sizes
 sbuck_sizes="4"
 
 # dbuck_sizes
-# dbuck_sizes="131072"
-# dbuck_sizes="32 128 512 2048"
-# dbuck_sizes="32 512 2048 4096"
-dbuck_sizes="32768 65536 131072"
+dbuck_sizes="32 256 2048 16384 131072"
 
 #indexes
-# indexes="alex lipp pgm finedex"
+indexes="alex lipp pgm finedex"
 
 # # Iterate the string array using for loop
 for scan_num in $scan_nums; do
