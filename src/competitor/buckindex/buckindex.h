@@ -116,7 +116,7 @@ size_t BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, SBUCKET_SIZE, DBUCKET_SIZE>::s
               Param *param) {
   size_t ret;
 
-  ret = idx.scan(key_low_bound, key_num, result);
+  ret = idx.scan_parallel(key_low_bound, key_num, result);
   
   return ret;
 }

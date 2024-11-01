@@ -42,10 +42,13 @@ indexInterface<KEY_TYPE, PAYLOAD_TYPE> *get_index(std::string index_type, Param 
 
     // index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 8, 256>;
 
-    assert(sbuck_size_%8 == 0);
-    assert(dbuck_size_%32 == 0);
     //index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, sbuck_size_, dbuck_size_>;
-    if (sbuck_size_ == 1 && dbuck_size_ == 1024) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 1, 1024>;
+    if (sbuck_size_ == 1 && dbuck_size_ == 32) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 1, 32>;
+    else if (sbuck_size_ == 1 && dbuck_size_ == 64) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 1, 64>;
+    else if (sbuck_size_ == 1 && dbuck_size_ == 128) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 1, 128>;
+    else if (sbuck_size_ == 1 && dbuck_size_ == 256) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 1, 256>;
+    else if (sbuck_size_ == 1 && dbuck_size_ == 512) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 1, 512>;
+    else if (sbuck_size_ == 1 && dbuck_size_ == 1024) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 1, 1024>;
     else if (sbuck_size_ == 1 && dbuck_size_ == 2048) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 1, 2048>;
     else if (sbuck_size_ == 1 && dbuck_size_ == 4096) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 1, 4096>;
     else if (sbuck_size_ == 1 && dbuck_size_ == 8192) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 1, 8192>;
@@ -64,6 +67,11 @@ indexInterface<KEY_TYPE, PAYLOAD_TYPE> *get_index(std::string index_type, Param 
     else if (sbuck_size_ == 1 && dbuck_size_ == 14680064) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 1, 14680064>; // 14M
     else if (sbuck_size_ == 1 && dbuck_size_ == 16777216) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 1, 16777216>; // 16M
     else if (sbuck_size_ == 1 && dbuck_size_ == 33554432) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 1, 33554432>; // 32M
+    else if (sbuck_size_ == 2 && dbuck_size_ == 32) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 2, 32>;
+    else if (sbuck_size_ == 2 && dbuck_size_ == 64) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 2, 64>;
+    else if (sbuck_size_ == 2 && dbuck_size_ == 128) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 2, 128>;
+    else if (sbuck_size_ == 2 && dbuck_size_ == 256) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 2, 256>;
+    else if (sbuck_size_ == 2 && dbuck_size_ == 512) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 2, 512>;
     else if (sbuck_size_ == 2 && dbuck_size_ == 1024) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 2, 1024>;
     else if (sbuck_size_ == 2 && dbuck_size_ == 2048) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 2, 2048>;
     else if (sbuck_size_ == 2 && dbuck_size_ == 4096) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 2, 4096>;
@@ -83,6 +91,11 @@ indexInterface<KEY_TYPE, PAYLOAD_TYPE> *get_index(std::string index_type, Param 
     else if (sbuck_size_ == 2 && dbuck_size_ == 14680064) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 2, 14680064>; // 14M
     else if (sbuck_size_ == 2 && dbuck_size_ == 16777216) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 2, 16777216>; // 16M
     else if (sbuck_size_ == 2 && dbuck_size_ == 33554432) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 2, 33554432>; // 32M
+    else if (sbuck_size_ == 4 && dbuck_size_ == 32) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 4, 32>;
+    else if (sbuck_size_ == 4 && dbuck_size_ == 64) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 4, 64>;
+    else if (sbuck_size_ == 4 && dbuck_size_ == 128) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 4, 128>;
+    else if (sbuck_size_ == 4 && dbuck_size_ == 256) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 4, 256>;
+    else if (sbuck_size_ == 4 && dbuck_size_ == 512) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 4, 512>;
     else if (sbuck_size_ == 4 && dbuck_size_ == 1024) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 4, 1024>;
     else if (sbuck_size_ == 4 && dbuck_size_ == 2048) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 4, 2048>;
     else if (sbuck_size_ == 4 && dbuck_size_ == 4096) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 4, 4096>;
@@ -102,6 +115,11 @@ indexInterface<KEY_TYPE, PAYLOAD_TYPE> *get_index(std::string index_type, Param 
     else if (sbuck_size_ == 4 && dbuck_size_ == 14680064) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 4, 14680064>; // 14M
     else if (sbuck_size_ == 4 && dbuck_size_ == 16777216) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 4, 16777216>; // 16M
     else if (sbuck_size_ == 4 && dbuck_size_ == 33554432) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 4, 33554432>; // 32M
+    else if (sbuck_size_ == 8 && dbuck_size_ == 32) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 8, 32>;
+    else if (sbuck_size_ == 8 && dbuck_size_ == 64) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 8, 64>;
+    else if (sbuck_size_ == 8 && dbuck_size_ == 128) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 8, 128>;
+    else if (sbuck_size_ == 8 && dbuck_size_ == 256) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 8, 256>;
+    else if (sbuck_size_ == 8 && dbuck_size_ == 512) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 8, 512>;
     else if (sbuck_size_ == 8 && dbuck_size_ == 1024) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 8, 1024>;
     else if (sbuck_size_ == 8 && dbuck_size_ == 2048) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 8, 2048>;
     else if (sbuck_size_ == 8 && dbuck_size_ == 4096) index = new BuckIndexInterface<KEY_TYPE, PAYLOAD_TYPE, 8, 4096>;
