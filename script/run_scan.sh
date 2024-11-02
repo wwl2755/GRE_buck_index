@@ -4,13 +4,15 @@
 datasets="books"
 
 # scan nums
-scan_nums="100 1000 10000 100000 1000000"
+# scan_nums="100 1000 10000 100000 1000000"
+scan_nums="10000 100000 1000000"
 
 # # sbuck_sizes
 sbuck_sizes="4"
 
 # dbuck_sizes
-dbuck_sizes="32 256 2048 16384 131072"
+# dbuck_sizes="32 2048"
+dbuck_sizes="131072"
 
 #indexes
 indexes="alex lipp pgm finedex"
