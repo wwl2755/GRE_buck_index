@@ -134,3 +134,37 @@ After the experiments are done, we can draw the figure:
 ```
 python Figure9_mrsw.py
 ```
+
+# Table 1
+Table 1: BLI time breakdown on fb
+
+We use vtune to analyse the time breakdown.
+
+Install related driver to get more analysis:
+```
+cd /opt/intel/oneapi/vtune/latest/sepdk/src
+sudo make
+sudo insmod sep.ko # can be other similar names, such as sep5.ko
+
+source /opt/intel/oneapi/vtune/latest/vtune-vars.sh
+
+# configure driverless without installing drivers
+echo 0 | sudo tee /proc/sys/kernel/perf_event_paranoid
+```
+
+Run experiment:
+```
+cd build
+vtune -collect hotspots -r vtune_results/time_breakdown -- numactl --cpunodebind=0 --membind=0  ./build/microbench --keys_file=./datasets/fb --keys_file_type=binary --read=0.5 --insert=0.5 --operations_num=100000000 --table_size=200000000 --init_table_ratio=0.5 --thread_num=1 --index=buckindex --bli_initial_filled_ratio=0.6 --bli_use_linear_regression=1  --bli_sbuck_size=4
+```
+
+After that, you can download the results in `build/vtune_results/time_breakdown`, and open it in a Windows/Linux Desktop, then clike "Flame Graph" to see the ratios.
+
+# Table 2
+First, run the experiment and log the terminal output to a file.
+```
+cd build
+sh ../script/bulk_load.sh > bulk_load_out.txt
+```
+
+Then, open `build/bulk_load_out.txt`, and search for "bulk loading throughput" for each learned index.
