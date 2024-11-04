@@ -29,3 +29,14 @@ To get Figure 1, run the following command:
 ```
 python Figure1_plot_err_vs_group_size.py
 ```
+
+
+
+<!-- Build with various hint systems
+```
+cmake .. -DHINT_MODE=mod_hash
+cmake .. -DHINT_MODE=cl_hash
+cmake .. -DHINT_MODE=murmur_hash
+cmake .. -DHINT_MODE=model_predict
+cmake .. -DHINT_MODE=no_hash -->
+```
