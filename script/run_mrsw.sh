@@ -13,13 +13,11 @@ sbuck_sizes="4"
 dbuck_sizes="131072"
 
 # other index types
-# indexes="alexol lippol xindex finedex"
 indexes="alexol lippol finedex"
 # indexes="xindex"
 
 # threads
-# threads="2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24"
-threads="3 4 5 6 7 8 9 10 11 12"
+threads="2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24"
 
 export OMP_PLACES=cores
 export OMP_PROC_BIND=close

@@ -106,3 +106,17 @@ After the experiments are done, we can draw the figure:
 ```
 python Figure7_s_dbuck_size.py
 ```
+
+# Figure 8
+Figure 8: Throughput with different initial fill ratios on books
+
+First, we need to run the experiment:
+```
+cd build
+sh ../script/run_fill_ratio.sh
+```
+
+After the experiments are done, we can draw the figure:
+```
+python Figure8_fill_ratio.py
+```

@@ -23,7 +23,7 @@ for ratio in $ratios; do
             # bli
             for sbuck_size in $sbuck_sizes; do
                 for dbuck_size in $dbuck_sizes; do
-                    command="numactl --cpunodebind=0 --membind=0 ./microbench --output_path=fill_ratio.csv --keys_file=../datasets/${dataset} --keys_file_type=binary --read=${ratio%:*} --insert=${ratio#*:} --operations_num=100000000 --table_size=200000000 --init_table_ratio=0.5 --thread_num=1 --index=buckindex --memory --bli_sbuck_size=${sbuck_size} --bli_dbuck_size=${dbuck_size} --bli_initial_filled_ratio=${initial_filled_ratio}  --error_bound=4"
+                    command="numactl --cpunodebind=0 --membind=0 ./microbench --output_path=../scripts/Figure8_fill_ratio.csv --keys_file=../datasets/${dataset} --keys_file_type=binary --read=${ratio%:*} --insert=${ratio#*:} --operations_num=100000000 --table_size=200000000 --init_table_ratio=0.5 --thread_num=1 --index=buckindex --memory --bli_sbuck_size=${sbuck_size} --bli_dbuck_size=${dbuck_size} --bli_initial_filled_ratio=${initial_filled_ratio}  --error_bound=4"
                     echo "command is $command"
                     $command
                 done
