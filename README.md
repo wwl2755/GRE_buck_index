@@ -21,6 +21,7 @@ cmake .. -DCMAKE_BUILD_TYPE=Release && make
 ```
 
 **After this project is successfully built, to reproduce the results in the paper, please refer to scripts/README.md**
+**To ensure the performance results are same with the paper, please provide an SSH public key, and you can by ssh into our server.**
 
 ## 4. Basic usage
 Below is the basic usage of the benchmark. To reproduce the result in the paper, please refer check the README in the `scripts` folder.

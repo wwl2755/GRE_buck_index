@@ -78,3 +78,16 @@ Run the following command to get Figure 4:
 python Figure4_hint_search_distance.py
 ```
 
+# Figure 6
+Figure 6: Throughput under different read-write ratios.
+
+First, we need to run the experiment:
+```
+cd build
+sh ../script/run_overall.sh
+```
+
+After the experiments are done, we can draw the figure:
+```
+python Figure6_overall_throughput.py
+```
