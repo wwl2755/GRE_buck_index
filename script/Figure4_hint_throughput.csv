@@ -1,0 +1,17 @@
+dataset,hint choice,throughput(IOPS)
+books,no hint,1698229
+books,linear model,3133493
+books,MOD,3726693
+books,cl-hash,3636094
+fb,no hint,2000366
+fb,linear model,2514135
+fb,MOD,3175304
+fb,cl-hash,2903627
+osm,no hint,1820655
+osm,linear model,2067825
+osm,MOD,2645969
+osm,cl-hash,2553121
+covid,no hint,2332698
+covid,linear model,2740766
+covid,MOD,2389455
+covid,cl-hash,2909164
