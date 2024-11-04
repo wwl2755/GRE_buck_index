@@ -27,7 +27,7 @@ for thread in $threads; do
         for dataset in $datasets; do
             for dbuck_size in $dbuck_sizes; do
                 for sbuck_size in $sbuck_sizes; do
-                    command="numactl --interleave=all ./bench_mrsw --output_path=mrsw.csv --keys_file=../datasets/${dataset} --keys_file_type=binary --read=${ratio%:*} --insert=${ratio#*:} --operations_num=100000000 --table_size=200000000 --init_table_ratio=0.5 --thread_num=${thread} --index=buckindex --memory --bli_initial_filled_ratio=0.6 --bli_sbuck_size=${sbuck_size} --bli_dbuck_size=${dbuck_size} --error_bound=4.8"
+                    command="numactl --interleave=all ./bench_mrsw --output_path=../scripts/Figure9_mrsw.csv --keys_file=../datasets/${dataset} --keys_file_type=binary --read=${ratio%:*} --insert=${ratio#*:} --operations_num=100000000 --table_size=200000000 --init_table_ratio=0.5 --thread_num=${thread} --index=buckindex --memory --bli_initial_filled_ratio=0.6 --bli_sbuck_size=${sbuck_size} --bli_dbuck_size=${dbuck_size} --error_bound=4.8"
                     echo "command is $command"
                     $command
                 done
@@ -35,7 +35,7 @@ for thread in $threads; do
 
             # other indexes
             for index in $indexes; do
-                command="numactl --interleave=all  ./bench_mrsw --output_path=mrsw.csv --keys_file=../datasets/${dataset} --keys_file_type=binary --read=${ratio%:*} --insert=${ratio#*:} --operations_num=100000000 --table_size=200000000 --init_table_ratio=0.5 --thread_num=${thread} --index=${index} --memory"
+                command="numactl --interleave=all  ./bench_mrsw --output_path=../scripts/Figure9_mrsw.csv --keys_file=../datasets/${dataset} --keys_file_type=binary --read=${ratio%:*} --insert=${ratio#*:} --operations_num=100000000 --table_size=200000000 --init_table_ratio=0.5 --thread_num=${thread} --index=${index} --memory"
                 echo "command is $command"
                 $command
             done

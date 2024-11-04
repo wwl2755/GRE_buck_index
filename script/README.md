@@ -120,3 +120,17 @@ After the experiments are done, we can draw the figure:
 ```
 python Figure8_fill_ratio.py
 ```
+
+# Figure 9
+Figure 9: Throughput with different number of cores
+
+First, we need to run the experiment:
+```
+cd build
+sh ../script/run_mrsw.sh
+```
+
+After the experiments are done, we can draw the figure:
+```
+python Figure9_mrsw.py
+```
