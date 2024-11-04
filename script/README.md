@@ -91,3 +91,18 @@ After the experiments are done, we can draw the figure:
 ```
 python Figure6_overall_throughput.py
 ```
+
+# Figure 7
+Figure 7: Throughput with different S-Bucket and D-Bucket size on books
+
+First, we need to run the experiment:
+```
+cd build
+sh ../script/run_s_dbuck_size.sh
+```
+
+
+After the experiments are done, we can draw the figure:
+```
+python Figure7_s_dbuck_size.py
+```
