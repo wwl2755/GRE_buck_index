@@ -81,6 +81,7 @@ add_definitions(-DBUCKINDEX_USE_LINEAR_REGRESSION)
 
 if(BUCKINDEX_DEBUG)
     add_definitions(-DBUCKINDEX_DEBUG)
+    message(STATUS "BUCKINDEX_DEBUG: ${BUCKINDEX_DEBUG}")
 endif()
 
 
